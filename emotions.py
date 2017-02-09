@@ -1,9 +1,9 @@
 import requests
 import time
+from secret_keys import emotion_api_key
 
 # Variables
 _url = 'https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize'
-_key = '98e72b2c085545e9b53f93d9210faa55'
 _maxNumRetries = 10
 
 
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     urlImage = 'https://raw.githubusercontent.com/Microsoft/ProjectOxford-ClientSDK/master/Face/Windows/Data/detection3.jpg'
 
     headers = dict()
-    headers['Ocp-Apim-Subscription-Key'] = _key
+    headers['Ocp-Apim-Subscription-Key'] = emotion_api_key
     headers['Content-Type'] = 'application/json'
 
     json = {'url': urlImage}
