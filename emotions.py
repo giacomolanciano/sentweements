@@ -1,13 +1,13 @@
 import requests
+import time
 
 # Variables
-
 _url = 'https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize'
 _key = '98e72b2c085545e9b53f93d9210faa55'
 _maxNumRetries = 10
 
 
-def processRequest(json, headers, data=None, params=None):
+def process_request(json, headers, data=None, params=None):
     """
     Helper function to process the request to Microsoft's APIs.
 
@@ -45,23 +45,23 @@ def processRequest(json, headers, data=None, params=None):
                 elif 'image' in response.headers['content-type'].lower():
                     result = response.content
         else:
-            print("Error code: %d" % (response.status_code))
+            print("Error code: %d" % response.status_code)
             print("Message: %s" % (response.json()['error']['message']))
 
         break
 
     return result
 
+if __name__ == '__main__':
+    # URL direction to image
+    urlImage = 'https://raw.githubusercontent.com/Microsoft/ProjectOxford-ClientSDK/master/Face/Windows/Data/detection3.jpg'
 
-# URL direction to image
-urlImage = 'https://raw.githubusercontent.com/Microsoft/ProjectOxford-ClientSDK/master/Face/Windows/Data/detection3.jpg'
+    headers = dict()
+    headers['Ocp-Apim-Subscription-Key'] = _key
+    headers['Content-Type'] = 'application/json'
 
-headers = dict()
-headers['Ocp-Apim-Subscription-Key'] = _key
-headers['Content-Type'] = 'application/json'
+    json = {'url': urlImage}
 
-json = { 'url': urlImage }
+    result = process_request(json, headers)
 
-result = processRequest( json, headers )
-
-print(result)
+    print(result)
