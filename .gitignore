@@ -360,4 +360,4 @@ crashlytics-build.properties
 fabric.properties
 
 # private files
-twitter_secret_keys.py
+secret_keys.py
