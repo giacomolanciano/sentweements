@@ -4,8 +4,8 @@ from secret_keys import EMOTION_API_KEY
 from secret_keys import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET
 from secret_keys import TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET
 import emotions
+import statistics
 import json
-import time
 
 QUERY = ['people', 'image', 'images', 'face']
 
@@ -21,11 +21,15 @@ class ImageListener(StreamListener):
     def __init__(self, print_progress=True):
         super(ImageListener, self).__init__()
         self.print_progress = print_progress
+        self.sample_size = 0
+        self.sentiments_mean = [0] * emotions.SENTIMENTS_NUM
 
     def on_data(self, data):
         try:
             tweet = json.loads(data)  # refer to https://dev.twitter.com/overview/api/tweets for tweet fields
             media_contents = tweet['entities']['media']  # list of images related to tweet
+            image_sentiments = None
+            image_url = ''
 
             for image in media_contents:
                 image_url = image['media_url']
@@ -34,7 +38,13 @@ class ImageListener(StreamListener):
 
                 # process info about each face in image
                 for face_analysis in image_sentiments:
-                    pass
+                    # update sentiments mean
+                    self.sample_size += 1
+                    scores = list(face_analysis['scores'].values())
+                    statistics.online_vectors_mean(self.sentiments_mean, scores, self.sample_size)
+
+                    if self.print_progress:
+                        print(self.sentiments_mean)
 
             if self.print_progress and image_sentiments:
                 print(image_url)
@@ -44,9 +54,9 @@ class ImageListener(StreamListener):
         except KeyError as e:
             # print('Missing %s key in json.' % str(e), '\n')
             pass
-        # except BaseException as e:
-        #     print('Error on_data: %s.' % str(e), '\n')
-        #     time.sleep(1)
+        except ConnectionError as e:
+            # print('Error on_data: %s.' % str(e), '\n')
+            pass
         return True
 
     def on_error(self, status):

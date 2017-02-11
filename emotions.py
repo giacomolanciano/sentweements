@@ -7,6 +7,7 @@ API_SUBSCR_HEADER_KEY = 'Ocp-Apim-Subscription-Key'
 CONTENT_TYPE_HEADER_KEY = 'Content-Type'
 CONTENT_TYPE_HEADER_VALUE = 'application/json'
 MAX_NUM_RETRIES = 60
+SENTIMENTS_NUM = 8  # 'anger', 'contempt', 'disgust', 'fear', 'happiness', 'neutral', 'sadness', 'surprise'
 
 
 class CognitiveAPIError(Exception):
@@ -44,7 +45,6 @@ def process_request(url_image, headers, data=None, params=None):
                 continue
             else:
                 raise CognitiveAPIError("Too many requests.", 429)
-                break
 
         elif response.status_code == 200 or response.status_code == 201:
             if 'content-length' in response.headers and int(response.headers['content-length']) == 0:
@@ -70,5 +70,5 @@ if __name__ == '__main__':
     headers[CONTENT_TYPE_HEADER_KEY] = CONTENT_TYPE_HEADER_VALUE
 
     image_sentiments = process_request(urlImage, headers)
-    for res in image_sentiments:
-        print(res)
+    for face_analysis in image_sentiments:
+        print(face_analysis)
