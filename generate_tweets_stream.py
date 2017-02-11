@@ -8,8 +8,6 @@ import emotions
 import statistics
 import json
 
-QUERY = ['people', 'image', 'images', 'face']
-
 
 class ImageListener(StreamListener):
     """ Perform sentiment analysis when a tweet is received. """
@@ -71,8 +69,10 @@ if __name__ == '__main__':
     stream = Stream(auth, listener)
 
     while True:
+
+
         try:
-            stream.filter(track=QUERY)
+            stream.filter(locations=[6.6267, 35.4897, 18.7976, 47.0920])  # Italy
         except KeyboardInterrupt:
             break
         except Exception as e:
