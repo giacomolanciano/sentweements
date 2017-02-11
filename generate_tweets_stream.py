@@ -1,9 +1,9 @@
+import geocoder
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler, Stream
 from secret_keys import EMOTION_API_KEY
 from secret_keys import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET
 from secret_keys import TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET
-from requests.exceptions import HTTPError
 import emotions
 import statistics
 import json
@@ -68,11 +68,13 @@ if __name__ == '__main__':
     auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
     stream = Stream(auth, listener)
 
+    # to filter tweets on location basis insert [west, south, east, north]
+    # coordinates of the desired bounding box
+    location = geocoder.osm('Italy')
+
     while True:
-
-
         try:
-            stream.filter(locations=[6.6267, 35.4897, 18.7976, 47.0920])  # Italy
+            stream.filter(locations=[location.west, location.south, location.east, location.north])
         except KeyboardInterrupt:
             break
         except Exception as e:
