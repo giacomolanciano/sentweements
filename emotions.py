@@ -2,17 +2,19 @@ import requests
 import time
 from secret_keys import emotion_api_key
 
-# Variables
-_url = 'https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize'
-_maxNumRetries = 10
+EMOTION_API_URL = 'https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize'
+API_SUBSCR_HEADER_KEY = 'Ocp-Apim-Subscription-Key'
+CONTENT_TYPE_HEADER_KEY = 'Content-Type'
+CONTENT_TYPE_HEADER_VALUE = 'application/json'
+MAX_NUM_RETRIES = 10
 
 
-def process_request(json, headers, data=None, params=None):
+def process_request(url_image, headers, data=None, params=None):
     """
     Helper function to process the request to Microsoft's APIs.
 
     Parameters:
-    json: Used when processing images from its URL.
+    url_image: URL of image to be processed.
     headers: Used to pass the key information and the data type request.
     data: Used when processing image read from disk.
     params: Query string parameters (not used).
@@ -20,15 +22,16 @@ def process_request(json, headers, data=None, params=None):
 
     retries = 0
     result = None
+    json = {'url': url_image}
 
     while True:
 
-        response = requests.request('post', _url, json=json, data=data, headers=headers, params=params)
+        response = requests.request('post', EMOTION_API_URL, json=json, data=data, headers=headers, params=params)
 
         if response.status_code == 429:
             print("Message: %s" % (response.json()['error']['message']))
 
-            if retries <= _maxNumRetries:
+            if retries <= MAX_NUM_RETRIES:
                 time.sleep(1)
                 retries += 1
                 continue
@@ -57,11 +60,7 @@ if __name__ == '__main__':
     urlImage = 'https://raw.githubusercontent.com/Microsoft/ProjectOxford-ClientSDK/master/Face/Windows/Data/detection3.jpg'
 
     headers = dict()
-    headers['Ocp-Apim-Subscription-Key'] = emotion_api_key
-    headers['Content-Type'] = 'application/json'
+    headers[API_SUBSCR_HEADER_KEY] = emotion_api_key
+    headers[CONTENT_TYPE_HEADER_KEY] = CONTENT_TYPE_HEADER_VALUE
 
-    json = {'url': urlImage}
-
-    result = process_request(json, headers)
-
-    print(result)
+    print(process_request(urlImage, headers))
