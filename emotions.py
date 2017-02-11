@@ -6,7 +6,14 @@ EMOTION_API_URL = 'https://westus.api.cognitive.microsoft.com/emotion/v1.0/recog
 API_SUBSCR_HEADER_KEY = 'Ocp-Apim-Subscription-Key'
 CONTENT_TYPE_HEADER_KEY = 'Content-Type'
 CONTENT_TYPE_HEADER_VALUE = 'application/json'
-MAX_NUM_RETRIES = 10
+MAX_NUM_RETRIES = 60
+
+
+class CognitiveAPIError(Exception):
+    def __init__(self, message, http_status):
+        super(CognitiveAPIError, self).__init__(message)
+
+        self.http_status = http_status
 
 
 def process_request(url_image, headers, data=None, params=None):
@@ -28,28 +35,27 @@ def process_request(url_image, headers, data=None, params=None):
 
         response = requests.request('post', EMOTION_API_URL, json=json, data=data, headers=headers, params=params)
 
-        if response.status_code == 429:
-            print("Message: %s" % (response.json()['error']['message']))
+        if response.status_code == 429:  # Too many requests (rate limiting)
+            # print("Message: %s" % (response.json()['error']['message']))
 
             if retries <= MAX_NUM_RETRIES:
                 time.sleep(1)
                 retries += 1
                 continue
             else:
-                print('Error: failed after retrying!')
+                raise CognitiveAPIError("Too many requests.", 429)
                 break
 
         elif response.status_code == 200 or response.status_code == 201:
             if 'content-length' in response.headers and int(response.headers['content-length']) == 0:
-                result = None
+                pass
             elif 'content-type' in response.headers and isinstance(response.headers['content-type'], str):
                 if CONTENT_TYPE_HEADER_VALUE in response.headers['content-type'].lower():
                     result = response.json() if response.content else None
-                elif 'image' in response.headers['content-type'].lower():
-                    result = response.content
+                # elif 'image' in response.headers['content-type'].lower():
+                #     result = response.content
         else:
-            print("Error code: %d" % response.status_code)
-            print("Message: %s" % (response.json()['error']['message']))
+            raise CognitiveAPIError(response.json()['error']['message'], response.status_code)
 
         break
 
