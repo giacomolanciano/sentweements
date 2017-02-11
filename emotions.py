@@ -1,6 +1,6 @@
+from secret_keys import EMOTION_API_KEY
 import requests
 import time
-from secret_keys import emotion_api_key
 
 EMOTION_API_URL = 'https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize'
 API_SUBSCR_HEADER_KEY = 'Ocp-Apim-Subscription-Key'
@@ -43,7 +43,7 @@ def process_request(url_image, headers, data=None, params=None):
             if 'content-length' in response.headers and int(response.headers['content-length']) == 0:
                 result = None
             elif 'content-type' in response.headers and isinstance(response.headers['content-type'], str):
-                if 'application/json' in response.headers['content-type'].lower():
+                if CONTENT_TYPE_HEADER_VALUE in response.headers['content-type'].lower():
                     result = response.json() if response.content else None
                 elif 'image' in response.headers['content-type'].lower():
                     result = response.content
@@ -60,7 +60,9 @@ if __name__ == '__main__':
     urlImage = 'https://raw.githubusercontent.com/Microsoft/ProjectOxford-ClientSDK/master/Face/Windows/Data/detection3.jpg'
 
     headers = dict()
-    headers[API_SUBSCR_HEADER_KEY] = emotion_api_key
+    headers[API_SUBSCR_HEADER_KEY] = EMOTION_API_KEY
     headers[CONTENT_TYPE_HEADER_KEY] = CONTENT_TYPE_HEADER_VALUE
 
-    print(process_request(urlImage, headers))
+    image_sentiments = process_request(urlImage, headers)
+    for res in image_sentiments:
+        print(res)
