@@ -73,6 +73,8 @@ if __name__ == '__main__':
     while True:
         try:
             stream.filter(track=QUERY)
+        except KeyboardInterrupt:
+            break
         except Exception as e:
             print('ERROR: %s.' % str(e), '\n')
             pass

@@ -34,12 +34,12 @@ def process_request(url_image, headers, data=None, params=None):
 
     while True:
 
-        print('REQUEST: {}'.format(url_image))
+        # print('REQUEST: {}'.format(url_image))
 
         response = requests.request('post', EMOTION_API_URL, json=json, data=data, headers=headers, params=params)
 
         if response.status_code == 429:  # Too many requests (rate limiting)
-            print("Message: %s" % (response.json()['error']['message']))
+            # print("Message: %s" % (response.json()['error']['message']))
 
             if retries <= MAX_NUM_RETRIES:
                 time.sleep(1)
