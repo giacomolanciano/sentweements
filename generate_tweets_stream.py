@@ -3,6 +3,7 @@ from tweepy import OAuthHandler, Stream
 from secret_keys import EMOTION_API_KEY
 from secret_keys import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET
 from secret_keys import TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET
+from requests.exceptions import HTTPError
 import emotions
 import statistics
 import json
@@ -54,9 +55,7 @@ class ImageListener(StreamListener):
         except KeyError as e:
             # print('Missing %s key in json.' % str(e), '\n')
             pass
-        except ConnectionError as e:
-            # print('Error on_data: %s.' % str(e), '\n')
-            pass
+
         return True
 
     def on_error(self, status):
@@ -70,4 +69,10 @@ if __name__ == '__main__':
     auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
     auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
     stream = Stream(auth, listener)
-    stream.filter(track=QUERY)
+
+    while True:
+        try:
+            stream.filter(track=QUERY)
+        except Exception as e:
+            print('ERROR: %s.' % str(e), '\n')
+            pass
