@@ -74,12 +74,12 @@ if __name__ == '__main__':
     users = None
     keywords = None
     location = geocoder.osm('Italy')
-    location_box = [location.west, location.south, location.east, location.north]
+    location_bbox = location.geojson['bbox']
     languages = None
 
     while True:
         try:
-            stream.filter(follow=users, track=keywords, locations=location_box, languages=languages)
+            stream.filter(follow=users, track=keywords, locations=location_bbox, languages=languages)
         except KeyboardInterrupt:
             break
         except Exception as e:
