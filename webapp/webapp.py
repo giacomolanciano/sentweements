@@ -1,8 +1,8 @@
-import __init__  # update Python PATH
-from flask import Flask, render_template, send_file, request
-import sys
-import os.path
 import time
+
+from flask import Flask, send_file, request
+
+from tweets_rest import ImageRetriever
 
 app = Flask(__name__)
 
@@ -10,11 +10,18 @@ app = Flask(__name__)
 @app.route('/')
 def root():
     query = request.args.get('query')
+    since_date = request.args.get('since_date')
+    until_date = request.args.get('until_date')
+    language = request.args.get('language')
+    location = request.args.get('location')
     if query:
         start_time = time.time()
-        results = None
+
+        ir = ImageRetriever(query, since_date, until_date, language, location)
+        # TODO start request
+
         elapsed = time.time() - start_time
-        return render_template('query_results.html', query=query, time=elapsed, results=results)
+        # return render_template('query_results.html', query=query, time=elapsed, results=results)
     else:
         return send_file('index.html')
 
