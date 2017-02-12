@@ -1,12 +1,12 @@
-import geocoder
-from tweepy.streaming import StreamListener
-from tweepy import OAuthHandler, Stream
-from secret_keys import EMOTION_API_KEY
-from secret_keys import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET
-from secret_keys import TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET
 import emotions
 import statistics
 import json
+import geocoder
+from tweepy import OAuthHandler, Stream
+from tweepy.streaming import StreamListener
+from secret_keys import EMOTION_API_KEY
+from secret_keys import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET
+from secret_keys import TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET
 
 
 class ImageListener(StreamListener):
