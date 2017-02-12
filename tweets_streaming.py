@@ -68,15 +68,20 @@ if __name__ == '__main__':
     auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
     stream = Stream(auth, listener)
 
-    # to filter tweets on location basis insert [west, south, east, north]
-    # coordinates of the desired bounding box
+    # Twitter Streaming APIs let us filter tweets according to users, text, location, and languages.
+    # The track, follow, and locations fields should be considered to be combined with an OR operator.
+
+    users = None
+    keywords = None
     location = geocoder.osm('Italy')
+    location_box = [location.west, location.south, location.east, location.north]
+    languages = None
 
     while True:
         try:
-            stream.filter(locations=[location.west, location.south, location.east, location.north])
+            stream.filter(follow=users, track=keywords, locations=location_box, languages=languages)
         except KeyboardInterrupt:
             break
         except Exception as e:
-            print('ERROR: %s.' % str(e), '\n')
+            # print('ERROR: %s.' % str(e), '\n')
             pass
