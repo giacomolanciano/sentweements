@@ -1,7 +1,7 @@
 import eventlet
 eventlet.monkey_patch()
-from flask import Flask, send_file, request
-from flask_socketio import SocketIO
+from flask import Flask, render_template, send_file, request
+from flask_socketio import SocketIO, emit
 from tweets_rest import ImageRetriever
 
 app = Flask(__name__)
@@ -12,7 +12,7 @@ threads = dict()
 
 
 def background_job(sid):
-    image_stream = ImageRetriever(sio, sid, 'ciao')
+    image_stream = ImageRetriever(sio, sid, query)
     image_stream.search_api_request()
     # while True:
     #     update = [1,2,3] #{'hi': 'hello', 'ciao': 'salve'}  # update object, TODO: insert call to blocking function here
@@ -22,8 +22,19 @@ def background_job(sid):
 
 @app.route('/')
 def index():
-    # return send_file('index.html')
-    return send_file('stub.html')
+    """Serve the client-side application."""
+    query = request.args.get('query')
+    # since_date = request.args.get('since_date')
+    # until_date = request.args.get('until_date')
+    # language = request.args.get('language')
+    # location = request.args.get('location')
+
+    if len(request.args):  # we have at least a search argument
+        # return the basic result page skeleton
+        # return render_template('query_results.html', query=query, time=elapsed, results=results)
+        return send_file('stub.html')  # return a stub client page
+    else:
+        return send_file('index.html')  # return the homepage
 
 
 @sio.on('connect')
