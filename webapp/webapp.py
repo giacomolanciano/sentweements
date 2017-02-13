@@ -1,11 +1,13 @@
+import eventlet
+eventlet.monkey_patch()
 from flask import Flask, render_template, send_file, request
 from flask_socketio import SocketIO, emit
-import threading
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-sio = SocketIO(app)
+sio = SocketIO(app, async_mode='eventlet')
 
+pool = eventlet.GreenPool(1000)
 subprocesses = dict()
 
 
@@ -25,9 +27,10 @@ def index():
 def on_connect():
     sid = request.sid
     print('Client connected:', sid)
-    t = threading.Thread(name=sid, target=background_job, args=(sid,))
-    subprocesses[sid] = t
-    t.start()
+    pool.spawn_n(background_job, sid)
+    # t = threading.Thread(name=sid, target=background_job, args=(sid,))
+    # subprocesses[sid] = t
+    # t.start()
 
 
 @sio.on('disconnect')
@@ -35,8 +38,8 @@ def on_disconnect():
     sid = request.sid
     print('Client disconnected:', sid)
     # on disconnect we destroy the corresponding thread
-    t = subprocesses.pop(sid)
-    #t.terminate()
+    # t = subprocesses.pop(sid)
+    # #t.terminate()
 
 
 if __name__ == '__main__':
