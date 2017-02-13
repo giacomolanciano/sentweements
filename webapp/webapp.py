@@ -1,6 +1,7 @@
-from flask import Flask, render_template, send_file, request
-from flask_socketio import SocketIO, emit
 import multiprocessing
+
+from flask import Flask, render_template, send_file, request
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -9,9 +10,9 @@ subprocesses = {}
 
 
 def background_job():
-    while True:
-        update = {}  # update object, TODO: insert call to blocking function here
-        socketio.emit('update', update, room=request.sid)
+    # ir = ImageRetriever()
+    # ir.search_api_request()
+    pass
 
 
 @app.route('/')
