@@ -16,8 +16,8 @@ def index():
     until_date = request.args.get('until_date')
     language = request.args.get('language')
     location = request.args.get('location')
-    if len(request.args):  # we have at least a search argument
 
+    if len(request.args):  # we have at least a search argument
         # TODO: define target function
         t = multiprocessing.Process(name=request.sid, target=insert_target_function_here)
         subprocesses[request.sid] = t
@@ -45,9 +45,10 @@ def test_disconnect():
     t.terminate()
 
 
-@socketio.on('my event')
-def test_message(message):
-    emit('my response', {'data': 'got it!'})
+# @socketio.on('my event')
+# def test_message(message):
+#     emit('my response', {'data': 'got it!'})
+
 
 if __name__ == '__main__':
     socketio.run(app)
