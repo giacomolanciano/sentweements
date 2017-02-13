@@ -1,7 +1,7 @@
 import eventlet
 eventlet.monkey_patch()
-from flask import Flask, render_template, send_file, request
-from flask_socketio import SocketIO, emit
+from flask import Flask, send_file, request
+from flask_socketio import SocketIO
 from tweets_rest import ImageRetriever
 
 app = Flask(__name__)
@@ -23,6 +23,7 @@ def background_job(sid):
 
 @app.route('/')
 def index():
+    # return send_file('index.html')
     return send_file('stub.html')
 
 
