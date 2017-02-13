@@ -24,16 +24,12 @@ def index():
     location = request.args.get('location')
 
     if len(request.args):  # we have at least a search argument
-        # TODO: define target function
-        t = multiprocessing.Process(name=request.sid, target=insert_target_function_here)
+        t = multiprocessing.Process(name=request.sid, target=background_job)
         subprocesses[request.sid] = t
         t.start()
 
-        ir = ImageRetriever(query, since_date, until_date, language, location)
-        # TODO: start request
-
         # return the basic result page skeleton
-        # return render_template('query_results.html', query=query, time=elapsed, results=results)
+        return render_template('query_results.html', query=query, time=elapsed, results=results)
     else:
         return send_file('index.html')  # return the homepage
 
