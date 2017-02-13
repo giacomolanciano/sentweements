@@ -8,6 +8,12 @@ socketio = SocketIO(app)
 subprocesses = {}
 
 
+def background_job():
+    while True:
+        update = {}  # update object, TODO: insert call to blocking function here
+        socketio.emit('update', update, room=request.sid)
+
+
 @app.route('/')
 def index():
     """Serve the client-side application."""
