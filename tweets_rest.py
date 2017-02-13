@@ -1,10 +1,9 @@
 import datetime
+import json
 
 import geocoder
 from tweepy import OAuthHandler, Cursor
 from tweepy.api import API
-
-import json
 
 import emotions
 import statistics
@@ -25,7 +24,8 @@ headers[emotions.CONTENT_TYPE_HEADER_KEY] = emotions.CONTENT_TYPE_HEADER_VALUE
 class ImageRetriever(object):
     """ Perform sentiment analysis of tweets matching a given query. """
 
-    def __init__(self, socket, room, query, since_date=None, until_date=None, language=None, location=None, print_progress=True):
+    def __init__(self, socket, room, query, since_date=None, until_date=None, language=None, location=None,
+                 print_progress=True):
         super(ImageRetriever, self).__init__()
         self.print_progress = print_progress
         self.socket = socket
@@ -75,29 +75,36 @@ class ImageRetriever(object):
 
             for image in media_contents:
                 image_url = image['media_url']
-                urls.append(image_url)
 
+                # make Emotion API call
                 image_sentiments = emotions.process_request(image_url, headers)
 
-                if self.print_progress and image_sentiments:
-                    print(image_url)
-                    print(image_sentiments)
-                    print('')
-
-                # process info about each face in image
-                for face_analysis in image_sentiments:
-                    # update sentiments mean
-                    self.sample_size += 1
-                    scores = list(face_analysis['scores'].values())
-                    statistics.online_vectors_mean(self.sentiments_mean, scores, self.sample_size)
-
+                if image_sentiments:
                     if self.print_progress:
-                        print(self.sentiments_mean)
+                        print(image_url)
+                        print(image_sentiments)
+                        print('')
 
-            result = dict()
-            result['urls'] = urls
-            result['mean'] = self.sentiments_mean
-            return result
+                    # the image contains faces, append to result
+                    urls.append(image_url)
+
+                    # process info about each face in image
+                    for face_analysis in image_sentiments:
+                        # update sentiments mean
+                        self.sample_size += 1
+                        scores = list(face_analysis['scores'].values())
+                        statistics.online_vectors_mean(self.sentiments_mean, scores, self.sample_size)
+
+                        if self.print_progress:
+                            print(self.sentiments_mean)
+
+            if urls:
+                result = dict()
+                result['urls'] = urls
+                result['mean'] = self.sentiments_mean
+                return result
+
+            return None
 
         except KeyError as e:
             # print('Missing %s key in json.' % str(e), '\n')
@@ -107,7 +114,6 @@ class ImageRetriever(object):
 
 
 if __name__ == '__main__':
-
     users = None
     query = 'trump clinton filter:images'
     language = 'en'
