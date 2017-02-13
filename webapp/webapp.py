@@ -1,56 +1,43 @@
 from flask import Flask, render_template, send_file, request
 from flask_socketio import SocketIO, emit
-import multiprocessing
+import threading
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
-subprocesses = {}
+sio = SocketIO(app)
+
+subprocesses = dict()
 
 
-def background_job():
+def background_job(sid):
     while True:
-        update = {}  # update object, TODO: insert call to blocking function here
-        socketio.emit('update', update, room=request.sid)
+        update = 'Hello World' # {'hi': 'hello', 'ciao': 'salve'}  # update object, TODO: insert call to blocking function here
+        sio.emit('update', update, room=sid)
+        sio.sleep(10)
 
 
 @app.route('/')
 def index():
-    """Serve the client-side application."""
-    query = request.args.get('query')
-    since_date = request.args.get('since_date')
-    until_date = request.args.get('until_date')
-    language = request.args.get('language')
-    location = request.args.get('location')
-
-    if len(request.args):  # we have at least a search argument
-        t = multiprocessing.Process(name=request.sid, target=background_job)
-        subprocesses[request.sid] = t
-        t.start()
-
-        # return the basic result page skeleton
-        return render_template('query_results.html', query=query, time=elapsed, results=results)
-    else:
-        return send_file('index.html')  # return the homepage
+    return send_file('stub.html')
 
 
-# @socketio.on('connect')
-# def on_connect():
-#     pass
+@sio.on('connect')
+def on_connect():
+    sid = request.sid
+    print('Client connected:', sid)
+    t = threading.Thread(name=sid, target=background_job, args=(sid,))
+    subprocesses[sid] = t
+    t.start()
 
 
-@socketio.on('disconnect')
-def test_disconnect():
-    print('Client disconnected')
+@sio.on('disconnect')
+def on_disconnect():
+    sid = request.sid
+    print('Client disconnected:', sid)
     # on disconnect we destroy the corresponding thread
-    t = subprocesses.pop(request.sid)
-    t.terminate()
-
-
-# @socketio.on('my event')
-# def test_message(message):
-#     emit('my response', {'data': 'got it!'})
+    t = subprocesses.pop(sid)
+    #t.terminate()
 
 
 if __name__ == '__main__':
-    socketio.run(app)
+    sio.run(app, debug=True, port=5000)
