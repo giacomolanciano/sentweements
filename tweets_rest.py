@@ -25,7 +25,7 @@ class ImageRetriever(object):
     """ Perform sentiment analysis of tweets matching a given query. """
 
     def __init__(self, socket, room, query, since_date=None, until_date=None, language=None, location=None,
-                 print_progress=True):
+                 print_progress=False):
         super(ImageRetriever, self).__init__()
         self.print_progress = print_progress
         self.socket = socket

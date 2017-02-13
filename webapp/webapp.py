@@ -8,8 +8,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 sio = SocketIO(app, async_mode='eventlet')
 
-pool = eventlet.GreenPool(1000)
-subprocesses = dict()
+threads = dict()
 
 
 def background_job(sid):
@@ -31,10 +30,8 @@ def index():
 def on_connect():
     sid = request.sid
     print('Client connected:', sid)
-    pool.spawn_n(background_job, sid)
-    # t = threading.Thread(name=sid, target=background_job, args=(sid,))
-    # subprocesses[sid] = t
-    # t.start()
+    gt = eventlet.greenthread.spawn(background_job, sid)
+    threads[sid] = gt
 
 
 @sio.on('disconnect')
@@ -42,8 +39,8 @@ def on_disconnect():
     sid = request.sid
     print('Client disconnected:', sid)
     # on disconnect we destroy the corresponding thread
-    # t = subprocesses.pop(sid)
-    # #t.terminate()
+    gt = threads.pop(sid)
+    gt.kill()
 
 
 if __name__ == '__main__':
