@@ -1,5 +1,4 @@
 import datetime
-import json
 
 import geocoder
 from tweepy import OAuthHandler, Cursor
@@ -57,13 +56,12 @@ class ImageRetriever(object):
         cursor = Cursor(api_client.search, q=query, lang=language, geocode=geocode)
         for page in cursor.pages():
             for tweet in page:
-                print(tweet)
-                # self._process_tweet(tweet)
+                self._process_tweet(tweet)
 
     def _process_tweet(self, status):
         """ Update mean sentiments vector upon seeing new image in a tweet. """
 
-        tweet = json.load(status._json)
+        tweet = status._json
 
         try:
             media_contents = tweet['entities']['media']  # list of images related to tweet
