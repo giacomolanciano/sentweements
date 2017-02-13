@@ -2,6 +2,7 @@ import eventlet
 eventlet.monkey_patch()
 from flask import Flask, render_template, send_file, request
 from flask_socketio import SocketIO, emit
+from tweets_rest import ImageRetriever
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -12,10 +13,12 @@ subprocesses = dict()
 
 
 def background_job(sid):
-    while True:
-        update = 'Hello World' # {'hi': 'hello', 'ciao': 'salve'}  # update object, TODO: insert call to blocking function here
-        sio.emit('update', update, room=sid)
-        sio.sleep(10)
+    image_stream = ImageRetriever(sio, sid, 'ciao')
+    image_stream.search_api_request()
+    # while True:
+    #     update = [1,2,3] #{'hi': 'hello', 'ciao': 'salve'}  # update object, TODO: insert call to blocking function here
+    #     sio.emit('update', update, room=sid)
+    #     sio.sleep(10)
 
 
 @app.route('/')

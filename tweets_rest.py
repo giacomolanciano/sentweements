@@ -4,6 +4,8 @@ import geocoder
 from tweepy import OAuthHandler, Cursor
 from tweepy.api import API
 
+import json
+
 import emotions
 import statistics
 from secret_keys import EMOTION_API_KEY
@@ -55,12 +57,12 @@ class ImageRetriever(object):
         if self.location_params:
             geocode = ','.join(self.location_params)
 
-        cursor = Cursor(api_client.search, q=query, lang=language, geocode=geocode)
+        cursor = Cursor(api_client.search, q=self.query, lang=self.language, geocode=geocode)
         for page in cursor.pages():
             for tweet in page:
                 update = self._process_tweet(tweet)
                 if update:
-                    self.socket.emit('update', update, room=self.room)
+                    self.socket.emit('update', json.dumps(update), room=self.room)
 
     def _process_tweet(self, status):
         """ Update mean sentiments vector upon seeing new image in a tweet. """
