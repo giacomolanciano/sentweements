@@ -23,9 +23,11 @@ headers[emotions.CONTENT_TYPE_HEADER_KEY] = emotions.CONTENT_TYPE_HEADER_VALUE
 class ImageRetriever(object):
     """ Perform sentiment analysis of tweets matching a given query. """
 
-    def __init__(self, query, since_date=None, until_date=None, language=None, location=None, print_progress=True):
+    def __init__(self, socket, room, query, since_date=None, until_date=None, language=None, location=None, print_progress=True):
         super(ImageRetriever, self).__init__()
         self.print_progress = print_progress
+        self.socket = socket
+        self.room = room
         self.query = query
         self.since_date = since_date
         self.until_date = until_date
@@ -56,7 +58,9 @@ class ImageRetriever(object):
         cursor = Cursor(api_client.search, q=query, lang=language, geocode=geocode)
         for page in cursor.pages():
             for tweet in page:
-                self._process_tweet(tweet)
+                update = self._process_tweet(tweet)
+                if update:
+                    self.socket.emit('update', update, room=self.room)
 
     def _process_tweet(self, status):
         """ Update mean sentiments vector upon seeing new image in a tweet. """
@@ -65,13 +69,18 @@ class ImageRetriever(object):
 
         try:
             media_contents = tweet['entities']['media']  # list of images related to tweet
-            image_sentiments = None
-            image_url = ''
+            urls = []
 
             for image in media_contents:
                 image_url = image['media_url']
+                urls.append(image_url)
 
                 image_sentiments = emotions.process_request(image_url, headers)
+
+                if self.print_progress and image_sentiments:
+                    print(image_url)
+                    print(image_sentiments)
+                    print('')
 
                 # process info about each face in image
                 for face_analysis in image_sentiments:
@@ -83,14 +92,16 @@ class ImageRetriever(object):
                     if self.print_progress:
                         print(self.sentiments_mean)
 
-            if self.print_progress and image_sentiments:
-                print(image_url)
-                print(image_sentiments)
-                print('')
+            result = dict()
+            result['urls'] = urls
+            result['mean'] = self.sentiments_mean
+            return result
 
         except KeyError as e:
             # print('Missing %s key in json.' % str(e), '\n')
             pass
+
+        return None
 
 
 if __name__ == '__main__':
