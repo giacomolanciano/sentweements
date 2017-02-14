@@ -6,7 +6,8 @@ body {
 }
 
 #splash {
-    margin-top: 20vh;
+    margin: 20vh auto auto;
+    max-width: 500px;
 }
 
 #webapp-title {
@@ -14,6 +15,18 @@ body {
     font-family: 'Pacifico', cursive;
     font-weight: 500;
     font-size: 50px;
+    margin-bottom: 30px;
+}
+
+#date_form {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+#since_div, #until_div {
+    min-width: 50%;
 }
 
 #search_bar_homepage {
@@ -28,8 +41,7 @@ body {
 }
 
 #search_button_homepage {
-    border: none;
-    //color: #aaa;
+    margin: 30px auto auto;
 }
 
 #search_form_input_homepage {

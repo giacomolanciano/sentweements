@@ -11,7 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwIImaF8eTPGf6mDoDt0VqQt7Mqce7mEw&v=3.exp&sensor=false&libraries=places"></script>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="static/style.css">
   </head>
 
   <body>
@@ -22,26 +22,10 @@
     <div id="dropdownHelp" class="dropdown-content">
       <a>
         <b>Sentweements</b> is a simple sentiment analysis tool for tweets.<br><br>
-
-        <!--Just type the terms you're interested in (e.g. <span class="query-example">"spaghetti carbonara"</span>) and press search.<br><br>-->
-        <!---->
-        <!--Advanced operators let you refine your queries:<br><br>-->
-
-        <!--<b>Union operator ||</b><br>-->
-        <!--Type two (or more) blocks of terms separated by <b>||</b> to get the union of the results of each block (e.g. <span class="query-example">"spaghetti carbonara || lasagna"</span> to get recipes related to spaghetti carbonara <em>or</em> lasagna).<br><br>-->
-
-        <!--<b>Negation operator -</b><br>-->
-        <!--You can exclude recipes that contain certain terms by prefixing them with the <b>-</b> operator (e.g. <span class="query-example">"spaghetti -artichokes"</span> to get recipes for spaghetti that do <em>not</em> contain artichokes).<br><br>-->
-
-        <!--<b>Diet filtering</b><br>-->
-        <!--You can refine your search appending the following keywords to your query to filter out results not compliant with your diet:-->
-        <!--<li><span class="query-example">*vegetarian</span></li>-->
-        <!--<li><span class="query-example">*vegan</span></li>-->
-        <!--<li><span class="query-example">*lactose-int</span></li>-->
       </a>
     </div>
   </div>
-  <div class="container-fluid" style="margin-left:700px; margin-right:700px">
+  <div class="container-fluid">
     <div id="splash">
       <h1 id="webapp-title">Sentweements</h1>
 
@@ -63,28 +47,28 @@
           </select>
         </div>
 
-        <div id="form-group">
+        <div class="form-group">
           <label for="pac-input">Location</label>
           <input name=location type="text" id="pac-input" class="form-control" placeholder="Enter a location">
         </div>
 
-        <div class="form-group row">
-          <div class="offset-sm-2 col-sm-10">
-            <div style="float: left; margin-right: 5px;">
-              <label for="since_date">Since</label>
-              <input name="since_date" type="date" class="form-control" id="since_date">
-            </div>
-            <div style="float: left; margin-right: 5px;">
-              <label for="until_date">Until</label>
-              <input name="until_date" type="date" class="form-control" id="until_date">
-            </div>
+        <div id="date_form">
+          <div id="since_div">
+            <label for="since_date">Since</label>
+            <input name="since_date" type="date" class="form-control" id="since_date">
+          </div>
+          <div id="until_div">
+            <label for="until_date">Until</label>
+            <input name="until_date" type="date" class="form-control" id="until_date">
           </div>
         </div>
 
-        <div class="form-group row">
-          <div class="offset-sm-2 col-sm-10">
-            <button id="search_button_homepage" type="submit" class="btn btn-primary">Submit</button>
-          </div>
+        <div class="clearfix"></div>
+
+        <div class="text-center">
+          <button id="search_button_homepage" class="btn btn-default text-center" type="submit">
+            <i class="fa fa-search fa-2x"></i>
+          </button>
         </div>
 
       </form>

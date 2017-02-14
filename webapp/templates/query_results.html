@@ -20,7 +20,25 @@
         <div id="splash">
             <h1 id="webapp-title">Sentweements</h1>
 
+            <div class="card">
+              <img class="card-img-top" id='img' src="" alt="Current image being processed.">
+            </div>
 
+            <div class="card text-center">
+              <div class="card-block">
+                <h4 class="card-title">Running average emotions</h4>
+                <p class="card-text">
+                  Anger: <span id=anger>0.00000</span><br/>
+                  Contempt: <span id=contempt>0.00000</span><br/>
+                  Disgust: <span id=disgust>0.00000</span><br/>
+                  Fear: <span id=fear>0.00000</span><br/>
+                  Happiness: <span id=happiness>0.00000</span><br/>
+                  Neutral: <span id=neutral>0.00000</span><br/>
+                  Sadness: <span id=sadness>0.00000</span><br/>
+                  Surprise: <span id=surprise>0.00000</span><br/>
+                </p>
+              </div>
+            </div>
 
             <img id="img" style="width:304px;height:228px;"><br>
             <input id="sentiment" type="text" class="field left" readonly>
