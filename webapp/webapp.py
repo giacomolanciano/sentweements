@@ -1,10 +1,9 @@
 import eventlet
 eventlet.monkey_patch()
 from flask import Flask, render_template, send_file, request
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 from tweets_rest import ImageRetriever
 import json
-import urllib
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -13,13 +12,9 @@ sio = SocketIO(app, async_mode='eventlet')
 threads = dict()
 
 
-def background_job(sid):
-    image_stream = ImageRetriever(sio, sid, query)
+def background_job(sid, query_params):
+    image_stream = ImageRetriever(sio, sid, query_params)
     image_stream.search_api_request()
-    # while True:
-    #     update = [1,2,3] #{'hi': 'hello', 'ciao': 'salve'}  # update object, TODO: insert call to blocking function here
-    #     sio.emit('update', update, room=sid)
-    #     sio.sleep(10)
 
 
 @app.route('/')
@@ -49,20 +44,22 @@ def on_connect():
 @sio.on('init')
 def on_init(msg):
     sid = request.sid
+    obj = json.loads(msg)
     print('Client:', sid)
     print('Params:', msg)
-    print('Object:', json.loads(msg))
-    # gt = eventlet.greenthread.spawn(background_job, sid)
-    # threads[sid] = gt
+    print('Object:', obj)
+    gt = eventlet.greenthread.spawn(background_job, sid, obj)
+    threads[sid] = gt
 
 
 @sio.on('disconnect')
 def on_disconnect():
     sid = request.sid
     print('Client disconnected:', sid)
+
     # on disconnect we destroy the corresponding thread
-    # gt = threads.pop(sid)
-    # gt.kill()
+    gt = threads.pop(sid)
+    gt.kill()
 
 
 if __name__ == '__main__':

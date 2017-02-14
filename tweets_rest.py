@@ -1,4 +1,3 @@
-import datetime
 import json
 
 import geocoder
@@ -24,18 +23,18 @@ headers[emotions.CONTENT_TYPE_HEADER_KEY] = emotions.CONTENT_TYPE_HEADER_VALUE
 class ImageRetriever(object):
     """ Perform sentiment analysis of tweets matching a given query. """
 
-    def __init__(self, socket, room, query, since_date=None, until_date=None, language=None, location=None,
-                 print_progress=False):
+    def __init__(self, socket, room, query_params, print_progress=False):
         super(ImageRetriever, self).__init__()
         self.print_progress = print_progress
         self.socket = socket
         self.room = room
-        self.query = query
-        self.since_date = since_date
-        self.until_date = until_date
-        self.language = language
+        self.query = query_params['query']
+        self.since_date = query_params['since_date']
+        self.until_date = query_params['until_date']
+        self.language = query_params['language']
 
         self.location_params = None
+        location = query_params['location']
         if location:
             geocoder_result = geocoder.osm(location)
             # to be concatenated with space when passed to api call
@@ -49,19 +48,17 @@ class ImageRetriever(object):
         geocode = None
 
         if self.since_date:
-            # TODO extract date and add since operator to query
-            since = datetime.strptime()
+            self.query = self.query + ' since:' + self.since_date
         if self.until_date:
-            # TODO extract date and add until operator to query
-            until = datetime.strptime()
+            self.query = self.query + ' until:' + self.until_date
         if self.location_params:
             geocode = ','.join(self.location_params)
 
         cursor = Cursor(api_client.search, q=self.query, lang=self.language, geocode=geocode)
-        for page in cursor.pages():
+        for page in cursor.pages(1):
             for tweet in page:
                 update = self._process_tweet(tweet)
-                if update:
+                if update and self.socket and self.room:
                     self.socket.emit('update', json.dumps(update), room=self.room)
 
     def _process_tweet(self, status):
@@ -114,17 +111,14 @@ class ImageRetriever(object):
 
 
 if __name__ == '__main__':
-    users = None
-    query = 'trump clinton filter:images'
-    language = 'en'
-    location = geocoder.osm('New York')
 
-    # to be concatenated with space when passed to api call
-    location_params = [str(location.lat), str(location.lng), '1mi']
+    init_params = {
+        'query': 'people images',
+        'since_date': '',
+        'until_date': '',
+        'language': '',
+        'location': ''
+    }
 
-    # # make Search API call
-    # result = search_api.search(q=query, lang=language)
-    # print(result)
-
-    ir = ImageRetriever(query)
+    ir = ImageRetriever(None, None, init_params)
     ir.search_api_request()
