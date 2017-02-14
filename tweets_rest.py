@@ -51,7 +51,6 @@ class ImageRetriever(object):
         self.sample_size = 0
         self.sentiments_mean = {'neutral': 0, 'contempt': 0, 'anger': 0, 'surprise': 0, 'disgust': 0, 'sadness': 0, 'happiness': 0, 'fear': 0}
 
-
     def search_api_request(self):
         # search allowed params:
         # 'q', 'lang', 'locale', 'since_id', 'geocode',
