@@ -53,30 +53,29 @@
           </button>
         </div>
         <div id="language_picker">
-          <select>
+          <select name="language">
               <option id="none" value="select">Select language</option>
-              <option id="english" value="en-GB">English GB</option>
-              <option id="american" value="en-US">English US</option>
+              <option id="english" value="en">English</option>
               <option id="italian" value="it">Italian</option>
               <option id="portuguese" value="pt">Portuguese</option>
               <option id="spanish" value="es">Spanish</option>
           </select>
         </div>
         <div id="pac-container">
-          <input id="pac-input" type="text"
+          <input id="pac-input" name=location type="text"
               placeholder="Enter a location">
         </div>
         <div class="date_picker_container">
           <!--<div style="width: 600px; float: left;"> Left </div>-->
           <!--<div style="margin-left: 620px;"> Right </div>-->
-          <form id="since_date_picker" class="date_picker">
+          <div id="since_date_picker" class="date_picker">
             Since<br>
             <input type="date" name="since_date">
-          </form>
-          <form id="until_date_picker" class="date_picker">
+          </div>
+          <div id="until_date_picker" class="date_picker">
             Until<br>
             <input type="date" name="until_date">
-          </form>
+          </div>
         </div>
       </form>
     </div>
