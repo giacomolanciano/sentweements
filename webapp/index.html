@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwIImaF8eTPGf6mDoDt0VqQt7Mqce7mEw&v=3.exp&sensor=false&libraries=places"></script>
     <link rel="stylesheet" href="/static/style.css">
   </head>
 
@@ -52,24 +52,32 @@
             <i class="fa fa-search fa-2x"></i>
           </button>
         </div>
-      </form>
-      <select id="language_picker">
-          <option id="none" value="select">Select language</option>
-          <option id="english" value="english">English</option>
-          <option id="spanish" value="spanish">Spanish</option>
-          <option id="portuguese" value="portuguese">Portuguese</option>
-      </select>
-      <div id="pac-container">
-        <input id="pac-input" type="text"
-            placeholder="Enter a location">
-      </div>
-      <form id="since_date_picker" class="date_picker">
-        Since:
-        <input type="date" name="since_date">
-      </form>
-      <form id="until_date_picker" class="date_picker">
-        Until:
-        <input type="date" name="until_date">
+        <div id="language_picker">
+          <select>
+              <option id="none" value="select">Select language</option>
+              <option id="english" value="en-GB">English GB</option>
+              <option id="american" value="en-US">English US</option>
+              <option id="italian" value="it">Italian</option>
+              <option id="portuguese" value="pt">Portuguese</option>
+              <option id="spanish" value="es">Spanish</option>
+          </select>
+        </div>
+        <div id="pac-container">
+          <input id="pac-input" type="text"
+              placeholder="Enter a location">
+        </div>
+        <div class="date_picker_container">
+          <!--<div style="width: 600px; float: left;"> Left </div>-->
+          <!--<div style="margin-left: 620px;"> Right </div>-->
+          <form id="since_date_picker" class="date_picker">
+            Since<br>
+            <input type="date" name="since_date">
+          </form>
+          <form id="until_date_picker" class="date_picker">
+            Until<br>
+            <input type="date" name="until_date">
+          </form>
+        </div>
       </form>
     </div>
   </div>
@@ -95,11 +103,12 @@
   }
   </script>
   <script>
-    function initialize() {
-      var input = document.getElementById('pac-input');
-      var autocomplete = new google.maps.places.Autocomplete(input);
-    }
-    google.maps.event.addDomListener(window, 'load', initialize);
+  /* initialize google place picker */
+  function initialize() {
+    var input = document.getElementById('pac-input');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+  }
+  google.maps.event.addDomListener(window, 'load', initialize);
   </script>
   </body>
 

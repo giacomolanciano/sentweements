@@ -44,10 +44,8 @@ body {
     max-width: 590px;
     display: flex;
     flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #d0d0d0;;
-    border-radius: 5px;
+    justify-content: begin;
+    align-items: begin;
 }
 
 #pac-container {
@@ -55,21 +53,17 @@ body {
     max-width: 590px;
     display: flex;
     flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #d0d0d0;;
-    border-radius: 5px;
+    justify-content: begin;
+    align-items: begin;
 }
 
-.date_picker {
+.date_picker_container {
     margin: 40px auto;
     max-width: 590px;
     display: flex;
     flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #d0d0d0;;
-    border-radius: 5px;
+    justify-content: begin;
+    align-items: begin;
 }
 
 .dropbtn {
