@@ -29,10 +29,10 @@
     var socket = io();
 
     socket.on('update', function(msg){
-        $('#sentiment').attr('value', msg);
+        $('#sentiment').attr('value', msg['mean']);
 
         $('#img').fadeOut(400, function() {
-                $("#img").attr('src',$imgURL);  // how to get url from msg?
+                $("#img").attr('src',msg['url']);
             })
             .fadeIn(400);
     })
