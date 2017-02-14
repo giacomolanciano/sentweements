@@ -1,4 +1,5 @@
 import json
+import time
 
 import geocoder
 from tweepy import OAuthHandler, Cursor
@@ -23,97 +24,86 @@ headers[emotions.CONTENT_TYPE_HEADER_KEY] = emotions.CONTENT_TYPE_HEADER_VALUE
 class ImageRetriever(object):
     """ Perform sentiment analysis of tweets matching a given query. """
 
-    def __init__(self, socket, room, query_params, print_progress=False):
+    def __init__(self, socket, room, query_params, print_progress=True):
         super(ImageRetriever, self).__init__()
         self.print_progress = print_progress
+
         self.socket = socket
         self.room = room
-        self.query = query_params['query']
-        self.since_date = query_params['since_date']
-        self.until_date = query_params['until_date']
-        self.language = query_params['language']
 
-        self.location_params = None
-        location = query_params['location']
-        if location:
-            geocoder_result = geocoder.osm(location)
+        query = query_params['query'].strip()
+        self.query = query if query else None
+        since = query_params['since_date'].strip()
+        self.since = since if since else None
+        until = query_params['until_date'].strip()
+        self.until = until if until else None
+        lang = query_params['language'].strip()
+        self.lang = lang if lang else None
+
+        self.geocode = None
+        self.location = query_params['location'].strip()
+        if self.location:
+            geocoder_result = geocoder.osm(self.location)
             # to be concatenated with space when passed to api call
-            self.location_params = [str(geocoder_result.lat), str(geocoder_result.lng), '1mi']
+            self.location_params = [str(geocoder_result.lat), str(geocoder_result.lng), '50km']
+            self.geocode = ','.join(self.location_params)
 
         self.sample_size = 0
         self.sentiments_mean = [0] * emotions.SENTIMENTS_NUM
 
+
     def search_api_request(self):
+        # search allowed params:
+        # 'q', 'lang', 'locale', 'since_id', 'geocode',
+        # 'max_id', 'since', 'until', 'result_type', 'count',
+        # 'include_entities', 'from', 'to', 'source']
+        cursor = Cursor(api_client.search, q=self.query+" filter:images", lang=self.lang, geocode=self.geocode,
+                        since=self.since, until=self.until)
+        for tweet in cursor.items():
+            update = self._process_tweet(tweet)
+            if update and self.socket and self.room:
+                self.socket.emit('update', json.dumps(update), room=self.room)
+            time.sleep(0.5)
 
-        geocode = None
-
-        if self.since_date:
-            self.query = self.query + ' since:' + self.since_date
-        if self.until_date:
-            self.query = self.query + ' until:' + self.until_date
-        if self.location_params:
-            geocode = ','.join(self.location_params)
-
-        cursor = Cursor(api_client.search, q=self.query, lang=self.language, geocode=geocode)
-        for page in cursor.pages(1):
-            for tweet in page:
-                update = self._process_tweet(tweet)
-                if update and self.socket and self.room:
-                    self.socket.emit('update', json.dumps(update), room=self.room)
 
     def _process_tweet(self, status):
         """ Update mean sentiments vector upon seeing new image in a tweet. """
 
         tweet = status._json
-
         try:
-            media_contents = tweet['entities']['media']  # list of images related to tweet
-            urls = []
+            image_url = tweet['entities']['media'][0]['media_url']
 
-            for image in media_contents:
-                image_url = image['media_url']
+            if self.print_progress:
+                print(image_url)
 
-                # make Emotion API call
-                image_sentiments = emotions.process_request(image_url, headers)
+            # make Emotion API call
+            image_sentiments = emotions.process_request(image_url, headers)
 
-                if image_sentiments:
+            if image_sentiments:
+                # process info about each face in image
+                for face_analysis in image_sentiments:
+                    # update sentiments mean
+                    self.sample_size += 1
+                    scores = list(face_analysis['scores'].values())
+                    statistics.online_vectors_mean(self.sentiments_mean, scores, self.sample_size)
+
                     if self.print_progress:
-                        print(image_url)
                         print(image_sentiments)
-                        print('')
+                        print(self.sentiments_mean)
 
-                    # the image contains faces, append to result
-                    urls.append(image_url)
+            result = dict()
+            result['url'] = image_url
+            result['mean'] = self.sentiments_mean
+            return result
 
-                    # process info about each face in image
-                    for face_analysis in image_sentiments:
-                        # update sentiments mean
-                        self.sample_size += 1
-                        scores = list(face_analysis['scores'].values())
-                        statistics.online_vectors_mean(self.sentiments_mean, scores, self.sample_size)
-
-                        if self.print_progress:
-                            print(self.sentiments_mean)
-
-            if urls:
-                result = dict()
-                result['urls'] = urls
-                result['mean'] = self.sentiments_mean
-                return result
-
+        except (KeyError, IndexError):
             return None
-
-        except KeyError as e:
-            # print('Missing %s key in json.' % str(e), '\n')
-            pass
-
-        return None
 
 
 if __name__ == '__main__':
 
     init_params = {
-        'query': 'people images',
+        'query': 'puppy',
         'since_date': '',
         'until_date': '',
         'language': '',
