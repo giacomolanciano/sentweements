@@ -2,6 +2,8 @@
 
 from emotions import SENTIMENTS
 
+DIGITS = 5
+
 
 def mean(values):
     return sum(values) / max(len(values), 1)
@@ -17,6 +19,7 @@ def online_vectors_mean(curr_mean_vector, new_vector, sample_size):
     for sentiment in SENTIMENTS:
         delta = new_vector[sentiment] - curr_mean_vector[sentiment]
         curr_mean_vector[sentiment] += delta / sample_size
+        curr_mean_vector[sentiment] = round(curr_mean_vector[sentiment], DIGITS)
 
 
 def vectors_mean(vectors):
