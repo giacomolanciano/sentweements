@@ -1,9 +1,11 @@
-import emotions
-import statistics
 import json
+
 import geocoder
 from tweepy import OAuthHandler, Stream
 from tweepy.streaming import StreamListener
+
+import emotions
+import statistics
 from secret_keys import EMOTION_API_KEY
 from secret_keys import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET
 from secret_keys import TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET
@@ -40,7 +42,7 @@ class ImageListener(StreamListener):
                     # update sentiments mean
                     self.sample_size += 1
                     scores = list(face_analysis['scores'].values())
-                    statistics.online_vectors_mean(self.sentiments_mean, scores, self.sample_size)
+                    statistics.online_sentiments_vectors_mean(self.sentiments_mean, scores, self.sample_size)
 
                     if self.print_progress:
                         print(self.sentiments_mean)
