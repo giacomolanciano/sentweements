@@ -8,6 +8,7 @@ CONTENT_TYPE_HEADER_KEY = 'Content-Type'
 CONTENT_TYPE_HEADER_VALUE = 'application/json'
 MAX_NUM_RETRIES = 60
 SENTIMENTS_NUM = 8  # 'anger', 'contempt', 'disgust', 'fear', 'happiness', 'neutral', 'sadness', 'surprise'
+SENTIMENTS = ['anger', 'contempt', 'disgust', 'fear', 'happiness', 'neutral', 'sadness', 'surprise']
 
 
 class CognitiveAPIError(Exception):

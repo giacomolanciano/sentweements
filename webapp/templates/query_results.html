@@ -1,39 +1,64 @@
-<!doctype html>
 <html>
-  <head>
-    <title>Socket.IO chat</title>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-    </style>
-  </head>
-  <body>
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+
+<head>
+    <meta charset="utf-8">
+    <!-- Set viewport_width = device_width and reset scaling (responsive design) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentweements</title>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro|Pacifico|Ubuntu+Mono|Bitter" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div id="splash">
+            <h1 id="webapp-title">Sentweements</h1>
+
+
+
+            <img id="img" style="width:304px;height:228px;"><br>
+            <input id="sentiment" type="text" class="field left" readonly>
+            <input class="form-control" type="text" placeholder="Readonly input here…" readonly>
+
+
+        </div>
+    </div>
     <script>
-      var socket = io();
+        var socket = io();
 
-      socket.emit('init', '{{ init_params|safe }}');
+        socket.emit('init', '{{ init_params|safe }}');
 
-      $('form').submit(function(){
-        // socket.emit('update', $('#m').val());
-        $('#m').val('');
-        return false;
-      });
+        socket.on('update', function(msg) {
+            var update = JSON.parse(msg);
+            $('#sentiment').attr('value', update['mean']);
 
-      socket.on('update', function(msg){
-        $('#messages').append($('<li>').text(msg));
-      })
+            $('#img').fadeOut(400, function() {
+                    $("#img").attr('src', update['url']);
+                })
+                .fadeIn(400);
+        })
+
+        /*
+        $("#img").click(function(e) {
+
+            console.log("a")
+
+            e.preventDefault();
+            $imgURL = $(this).attr("href");
+            $(".boat_listing .mainGallery")
+                .fadeOut(400, function() {
+                    $(".boat_listing .mainGallery").attr('src',$imgURL);
+                })
+                .fadeIn(400);
+        });
+        */
     </script>
-  </body>
+</body>
+
 </html>

@@ -1,6 +1,6 @@
-<html>
+  <html>
 
-  <head>
+<head>
     <meta charset="utf-8">
     <!-- Set viewport_width = device_width and reset scaling (responsive design) -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,45 +13,45 @@
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <link rel="stylesheet" href="/static/style.css">
-  </head>
+</head>
 
-  <body>
-  <div class="container-fluid">
-    <div id="splash">
-      <h1 id="webapp-title">Sentweements</h1>
+<body>
+    <div class="container-fluid">
+        <div id="splash">
+            <h1 id="webapp-title">Sentweements</h1>
 
-      <img id="img" style="width:304px;height:228px;"><br>
-      <input id="sentiment" type="text" class="field left" readonly>
+            <img id="img" style="width:304px;height:228px;"><br>
+            <input id="sentiment" type="text" class="field left" readonly>
 
+        </div>
     </div>
-  </div>
-  <script>
-    var socket = io();
+    <script>
+        var socket = io();
 
-    socket.on('update', function(msg){
-        $('#sentiment').attr('value', msg['mean']);
+        socket.on('update', function(msg) {
+            $('#sentiment').attr('value', msg['mean']);
 
-        $('#img').fadeOut(400, function() {
-                $("#img").attr('src',msg['url']);
-            })
-            .fadeIn(400);
-    })
+            $('#img').fadeOut(400, function() {
+                    $("#img").attr('src', msg['url']);
+                })
+                .fadeIn(400);
+        })
 
-    /*
-    $("#img").click(function(e) {
+        /*
+        $("#img").click(function(e) {
 
-        console.log("a")
+            console.log("a")
 
-        e.preventDefault();
-        $imgURL = $(this).attr("href");
-        $(".boat_listing .mainGallery")
-            .fadeOut(400, function() {
-                $(".boat_listing .mainGallery").attr('src',$imgURL);
-            })
-            .fadeIn(400);
-    });
-    */
-  </script>
-  </body>
+            e.preventDefault();
+            $imgURL = $(this).attr("href");
+            $(".boat_listing .mainGallery")
+                .fadeOut(400, function() {
+                    $(".boat_listing .mainGallery").attr('src',$imgURL);
+                })
+                .fadeIn(400);
+        });
+        */
+    </script>
+</body>
 
 </html>

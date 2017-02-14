@@ -1,5 +1,7 @@
 """ Module for basic statistic operations. """
+from __future__ import division
 
+from emotions import SENTIMENTS
 
 def mean(values):
     return sum(values) / max(len(values), 1)
