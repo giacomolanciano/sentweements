@@ -64,7 +64,7 @@ class ImageRetriever(object):
             update = self._process_tweet(tweet)
             if update and self.socket and self.room:
                 self.socket.emit('update', json.dumps(update), room=self.room)
-            time.sleep(0.5)
+            time.sleep(1.5)
 
     def _process_tweet(self, status):
         """ Update mean sentiments vector upon seeing new image in a tweet. """
