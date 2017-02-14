@@ -51,7 +51,6 @@ class ImageRetriever(object):
         self.sample_size = 0
         self.sentiments_mean = [0] * emotions.SENTIMENTS_NUM
 
-
     def search_api_request(self):
         # search allowed params:
         # 'q', 'lang', 'locale', 'since_id', 'geocode',
