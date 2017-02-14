@@ -85,7 +85,7 @@ class ImageRetriever(object):
                     # update sentiments mean
                     self.sample_size += 1
                     scores = face_analysis['scores']
-                    statistics.online_vectors_mean(self.sentiments_mean, scores, self.sample_size)
+                    statistics.online_sentiments_vectors_mean(self.sentiments_mean, scores, self.sample_size)
 
                     if self.print_progress:
                         print(image_sentiments)

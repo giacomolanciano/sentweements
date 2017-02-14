@@ -9,7 +9,7 @@ def mean(values):
     return sum(values) / max(len(values), 1)
 
 
-def online_vectors_mean(curr_mean_vector, new_vector, sample_size):
+def online_sentiments_vectors_mean(curr_mean_vector, new_vector, sample_size):
     """
     Perform step of online mean algorithm, for each component of a vector
     (refer https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance).
@@ -34,8 +34,8 @@ if __name__ == '__main__':
     b = {'neutral': 1, 'contempt': 2, 'anger': 3, 'surprise': 4, 'disgust': 5, 'sadness': 6, 'happiness': 7, 'fear': 8}
     c = {'neutral': 1, 'contempt': 6, 'anger': 3, 'surprise': 1, 'disgust': 9, 'sadness': 6, 'happiness': 7, 'fear': 8}
 
-    online_vectors_mean(a, b, 1)
+    online_sentiments_vectors_mean(a, b, 1)
     print(a)
 
-    online_vectors_mean(a, c, 2)
+    online_sentiments_vectors_mean(a, c, 2)
     print(a)
