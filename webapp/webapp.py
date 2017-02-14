@@ -32,7 +32,8 @@ def index():
         # return the basic result page skeleton
         return render_template('query_results.html', init_params=json.dumps(init_params))
     else:
-        return send_file('index.html')  # return the homepage
+        # return send_file('index.html')  # return the homepage
+        return send_file('query_results_skeleton.html')  # return the homepage
 
 
 @sio.on('connect')

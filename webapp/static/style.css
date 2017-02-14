@@ -70,6 +70,28 @@ body {
     margin-left: 40px;
 }
 
+#img {
+    margin: 40px auto;
+    //max-width: 590px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #d0d0d0;;
+    border-radius: 5px;
+}
+
+#sentiment {
+    margin: 40px auto;
+    //max-width: 590px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #d0d0d0;;
+    border-radius: 5px;
+}
+
 .dropbtn {
     padding: 16px;
     font-size: 16px;
