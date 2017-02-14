@@ -49,7 +49,9 @@ class ImageRetriever(object):
             self.geocode = ','.join(self.location_params)
 
         self.sample_size = 0
-        self.sentiments_mean = {'neutral': 0, 'contempt': 0, 'anger': 0, 'surprise': 0, 'disgust': 0, 'sadness': 0, 'happiness': 0, 'fear': 0}
+
+        zeros = [0] * emotions.SENTIMENTS_NUM
+        self.sentiments_mean = dict(zip(emotions.SENTIMENTS, zeros))
 
     def search_api_request(self):
         # search allowed params:
@@ -82,7 +84,7 @@ class ImageRetriever(object):
                 for face_analysis in image_sentiments:
                     # update sentiments mean
                     self.sample_size += 1
-                    scores = list(face_analysis['scores'])
+                    scores = face_analysis['scores']
                     statistics.online_vectors_mean(self.sentiments_mean, scores, self.sample_size)
 
                     if self.print_progress:
@@ -101,7 +103,7 @@ class ImageRetriever(object):
 if __name__ == '__main__':
 
     init_params = {
-        'query': 'puppy',
+        'query': 'puppy filter:images',
         'since_date': '',
         'until_date': '',
         'language': '',

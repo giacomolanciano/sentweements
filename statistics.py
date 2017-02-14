@@ -1,7 +1,7 @@
 """ Module for basic statistic operations. """
-from __future__ import division
 
 from emotions import SENTIMENTS
+
 
 def mean(values):
     return sum(values) / max(len(values), 1)
@@ -13,9 +13,10 @@ def online_vectors_mean(curr_mean_vector, new_vector, sample_size):
     (refer https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance).
     Note: side-effect on curr_mean_vector.
     """
-    for component, (curr_mean, new_elem) in enumerate(zip(curr_mean_vector, new_vector)):
-        delta = new_elem - curr_mean
-        curr_mean_vector[component] += (delta / sample_size)
+
+    for sentiment in SENTIMENTS:
+        delta = new_vector[sentiment] - curr_mean_vector[sentiment]
+        curr_mean_vector[sentiment] += delta / sample_size
 
 
 def vectors_mean(vectors):
@@ -26,9 +27,12 @@ def vectors_mean(vectors):
 
 
 if __name__ == '__main__':
-    a = [[240, 240, 239],
-         [250, 249, 237],
-         [242, 239, 237],
-         [240, 234, 233]]
-    r = vectors_mean(a)
-    print(r)
+    a = {'neutral': 0, 'contempt': 0, 'anger': 0, 'surprise': 0, 'disgust': 0, 'sadness': 0, 'happiness': 0, 'fear': 0}
+    b = {'neutral': 1, 'contempt': 2, 'anger': 3, 'surprise': 4, 'disgust': 5, 'sadness': 6, 'happiness': 7, 'fear': 8}
+    c = {'neutral': 1, 'contempt': 6, 'anger': 3, 'surprise': 1, 'disgust': 9, 'sadness': 6, 'happiness': 7, 'fear': 8}
+
+    online_vectors_mean(a, b, 1)
+    print(a)
+
+    online_vectors_mean(a, c, 2)
+    print(a)
