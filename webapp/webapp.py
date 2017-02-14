@@ -48,7 +48,6 @@ def on_init(msg):
     obj = json.loads(msg)
     print('Client:', sid)
     print('Params:', msg)
-    print('Object:', obj)
     gt = eventlet.greenthread.spawn(background_job, sid, obj)
     threads[sid] = gt
 
