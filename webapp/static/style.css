@@ -66,6 +66,10 @@ body {
     align-items: begin;
 }
 
+#until_date_picker {
+    margin-left: 40px;
+}
+
 .dropbtn {
     padding: 16px;
     font-size: 16px;
