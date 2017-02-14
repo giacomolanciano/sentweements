@@ -14,16 +14,16 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="static/query_results.css">
 </head>
 
 <body>
     <div class="container-fluid">
-        <div id="splash">
+        <div id="splaaash">
             <h1 id="webapp-title">Sentweements</h1>
 
-            <div class="card">
-              <img class="card-img-top" id='img' src="" alt="Current image being processed.">
+            <div class="card" id="image-card">
+              <img class="card-img-top center-block" id='img' src="" alt="Current image being processed.">
             </div>
 
             <div class="card text-center">
@@ -41,12 +41,6 @@
                 </p>
               </div>
             </div>
-
-            <img id="img" style="width:304px;height:228px;"><br>
-            <input id="sentiment" type="text" class="field left" readonly>
-            <input class="form-control" type="text" placeholder="Readonly input here…" readonly>
-
-
         </div>
     </div>
     <script>

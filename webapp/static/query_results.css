@@ -1,5 +1,3 @@
-/* mobile-first approach */
-
 body {
   font-family: "Source Sans Pro", "Roboto", "Open Sans", Arial, sans-serif;
   font-size: 15px;
@@ -10,151 +8,19 @@ body {
   padding: 0;
 }
 
-.top-bar {
-  background-color: white;
-  text-align: center;
-  border-bottom: 1px solid #d0d0d0;
-  padding: 10px 10px 15px;
+#webapp-title {
+    text-align: center;
+    font-family: 'Pacifico', cursive;
+    font-weight: 500;
+    font-size: 50px;
+    margin-bottom: 30px;
 }
 
-#splash-result {
-  font-family: 'Pacifico', cursive;
-  font-weight: 500;
-  font-size: 25px;
+#image-card {
+    height: 60vh;
 }
 
-#search_form {
-  margin: auto;
-  width: 100%;
-}
-
-#search_form * {
-  background-color: #f7f7f7;
-}
-
-#search_bar {
-  width: 100%;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #d0d0d0;;
-  border-radius: 5px;
-}
-
-#search_button {
-  border: none;
-  color: #aaa;
-}
-
-#search_form_input {
-  width: 100%;
-  border: none;
-  box-shadow: none;
-  font-size: 20px;
-}
-
-.results-container {
-  margin: auto;
-  width: 90%;
-}
-
-.result {
-  margin-bottom: 25px;
-}
-
-.stats {
-    font-size: 15px;
-    color: #808080;
-    margin: 15px auto;
-}
-
-/*
-.r_title, .r_author, .r_url, .r_score {
-  white-space: nowrap;
-}*/
-
-.r_title {
-  font-size: 20px;
-  margin-bottom: 0px;
-}
-
-.r_author {
-  font-size: 15px;
-}
-
-.r_url {
-  color: #006642;
-  font-style: normal;
-  display: block;
-  margin-top: 0px;
-  width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.r_description {
-  display: block; /* Fallback for non-webkit */
-  display: -webkit-box;
-  max-height: 2.6em; /* Fallback for non-webkit */
-  margin: 0 auto;
-  line-height: 1.3em;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.r_score {
-    font-size: 14px;
-    color: #808080;
-    margin: 15px auto;
-}
-
-@media (min-width: 768px) {
-  /*for desktop*/
-
-  .top-bar {
-    background-color: #f1f1f1;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 10px;
-    margin: 0;
-  }
-
-  #splash-result {
-    font-size: 15px;
-    margin: 0;
-  }
-
-  .top-bar * {
-    vertical-align: middle;
-  }
-
-  #splash-result {
-    display: inline-block;
-    font-size: 1.5em;
-    padding: 0;
-    margin: 0 10px;
-  }
-
-  #search_form {
-    display: inline-block;
-    margin: auto 10px;
-    max-width: 590px;
-    width: 100%;
-  }
-  
-  #search_form * {
-    background-color: white;
-  }
-  
-  .results-container {
-    margin-left: 155px;
-    max-width: 575px;
-    width: 100%;
-  }
+#img {
+  max-width: 100%;
+  max-height: 100%;
 }
