@@ -44,6 +44,14 @@
         </div>
     </div>
     <script>
+        function refreshPageContent(url, mean) {
+
+
+          $('#img').animate({opacity: 1}); // FINALLY fade it in
+
+
+        }
+
         var socket = io();
 
         socket.emit('init', '{{ init_params|safe }}');
@@ -53,10 +61,12 @@
             var url = update.url;
             var mean = update.mean;
 
-            $('#img').fadeOut(400, function() {
-                    $("#img").attr('src', update['url']);
-                })
-                .fadeIn(400);
+            $('#img').animate(
+              {opacity: 0},
+              {complete: refreshPageContent}
+            );
+
+            $("#img").attr('src', update['url']);
 
             $('#anger').text(mean.anger);
             $('#neutral').text(mean.neutral);
@@ -66,6 +76,13 @@
             $('#surprise').text(mean.surprise);
             $('#fear').text(mean.fear);
             $('#contempt').text(mean.contempt);
+
+            // $('#img').fadeOut(750, function() {
+            //         $("#img").attr('src', update['url']);
+            //     })
+            //     .fadeIn(750);
+
+
         })
 
         /*
