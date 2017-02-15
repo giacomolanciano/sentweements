@@ -9,8 +9,8 @@ Final project for [Data Mining](http://aris.me/index.php/data-mining-2016) cours
 ## Technologies
 - Microsoft Emotion API - the artificial intelligence that detect emotions based on universal facial expressions.
 - Twitter Search API - give acces to indices of recent or popular Tweets.
-- [Flask](http://flask.pocoo.org/) microframework to build the webserver and serve client requests.
-- [SocketIO](http://socket.io/) to build the pub-sub system to push notifications between client and server.
+- [Flask](http://flask.pocoo.org/) - microframework to build the webserver and serve client requests.
+- [SocketIO](http://socket.io/) - to build the pub-sub system to push notifications between client and server.
 
 ## To run
 To run our code, be sure to have Python 3 installed. Note that some additional Python modules are required.  
