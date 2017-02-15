@@ -12,10 +12,3 @@ Final project for [Data Mining](http://aris.me/index.php/data-mining-2016) cours
 |Fabio Rosato      |rosato.1565173@studenti.uniroma1.it  |  
 |Giacomo Lanciano  |lanciano.1487019@studenti.uniroma1.it|  
 |Francisco Ferreres|matakukos@gmail.com                  |   
-
-## Available material
-
-In this repo you can find:
-- lecture slides (also available on [SlideShare](http://www.slideshare.net/GiacomoLanciano/azure-machine-learning-tutorial)).
-- homework assignments.
-- sample scripts.
