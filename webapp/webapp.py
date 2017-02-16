@@ -1,9 +1,12 @@
+import json
+
 import eventlet
-eventlet.monkey_patch()
 from flask import Flask, render_template, send_file, request
 from flask_socketio import SocketIO
+
 from tweets_rest import ImageRetriever
-import json
+
+eventlet.monkey_patch()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
