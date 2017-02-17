@@ -11,6 +11,7 @@ import statistics
 from secret_keys import *
 
 DEST = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+THREADS_PER_TWITTER_KEY = 2
 
 
 class ImageListener(StreamListener):
@@ -94,10 +95,11 @@ class RegionListener(StreamListener):
         return True
 
 
-def get_region_stream(region):
+def get_region_stream(region, twitter_consumer_key, twitter_consumer_secret, twitter_access_token,
+                      twitter_access_token_secret):
     listener = RegionListener(region)
-    auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
-    auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
+    auth = OAuthHandler(twitter_consumer_key, twitter_consumer_secret)
+    auth.set_access_token(twitter_access_token, twitter_access_token_secret)
     stream = Stream(auth, listener)
 
     location = geocoder.osm(region)
@@ -118,17 +120,25 @@ if __name__ == '__main__':
 
     import threading
 
-    REGIONS = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia Romagna", "Friuli Venezia Giulia",
-                "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia",
-                "Toscana", "Trentino Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"]
+    ITALIAN_REGIONS = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia Romagna", "Friuli Venezia Giulia",
+                       "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia",
+                       "Toscana", "Trentino Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"]
 
     # create destination directory if not exists
     if not os.path.exists(DEST):
         os.makedirs(DEST)
 
-    # Note: same key can be used by AT MOST TWO threads
-    for region in REGIONS:
-        region += ", Italy"
-        t = threading.Thread(target=get_region_stream, args=(region,))
-        t.start()
-        time.sleep(1)
+    credentials = zip(TWITTER_CONSUMER_KEYS, TWITTER_CONSUMER_SECRETS, TWITTER_ACCESS_TOKENS,
+                      TWITTER_ACCESS_TOKEN_SECRETS)
+
+    i = 0
+    for ck, cs, at, ats in zip(TWITTER_CONSUMER_KEYS, TWITTER_CONSUMER_SECRETS, TWITTER_ACCESS_TOKENS,
+                               TWITTER_ACCESS_TOKEN_SECRETS):
+
+        for r in range(i, i + THREADS_PER_TWITTER_KEY):
+            region = ITALIAN_REGIONS[r] + ", Italy"
+            t = threading.Thread(target=get_region_stream, args=(region, ck, cs, at, ats))
+            t.start()
+            time.sleep(1)  # delay threads using the same key to prevent api error
+
+        i += THREADS_PER_TWITTER_KEY
