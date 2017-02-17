@@ -12,6 +12,9 @@ from secret_keys import *
 
 DEST = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 THREADS_PER_TWITTER_KEY = 2
+ITALIAN_REGIONS = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia Romagna", "Friuli Venezia Giulia",
+                   "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia",
+                   "Toscana", "Trentino Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"]
 
 
 class ImageListener(StreamListener):
@@ -120,16 +123,9 @@ if __name__ == '__main__':
 
     import threading
 
-    ITALIAN_REGIONS = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia Romagna", "Friuli Venezia Giulia",
-                       "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia",
-                       "Toscana", "Trentino Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"]
-
     # create destination directory if not exists
     if not os.path.exists(DEST):
         os.makedirs(DEST)
-
-    credentials = zip(TWITTER_CONSUMER_KEYS, TWITTER_CONSUMER_SECRETS, TWITTER_ACCESS_TOKENS,
-                      TWITTER_ACCESS_TOKEN_SECRETS)
 
     i = 0
     for ck, cs, at, ats in zip(TWITTER_CONSUMER_KEYS, TWITTER_CONSUMER_SECRETS, TWITTER_ACCESS_TOKENS,
