@@ -109,7 +109,7 @@ if __name__ == '__main__':
 
     location = geocoder.osm(city)
     location_bbox = location.geojson['bbox']
-    print('bbox: '+location_bbox)
+    print('bbox: ' + str(location_bbox))
 
     # Twitter Streaming APIs let us filter tweets according to users, text, location, and languages.
     # The track, follow, and locations fields should be considered to be combined with an OR operator.
