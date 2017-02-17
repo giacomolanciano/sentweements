@@ -7,9 +7,7 @@ from tweepy.streaming import StreamListener
 
 import emotions
 import statistics
-from secret_keys import EMOTION_API_KEY
-from secret_keys import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET
-from secret_keys import TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET
+from secret_keys import *
 
 DEST = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
@@ -67,18 +65,18 @@ class ImageListener(StreamListener):
         return True
 
 
-class CityListener(StreamListener):
+class RegionListener(StreamListener):
     """ Store a stream of tweets coming from given city. """
 
-    def __init__(self, city_name, print_progress=True):
-        super(CityListener, self).__init__()
+    def __init__(self, region_name, print_progress=True):
+        super(RegionListener, self).__init__()
         self.print_progress = print_progress
 
-        # filter out spaces and commas from city name
-        self.city_name = str.lower(str.replace(str.replace(city_name, ' ', '_'), ',', ''))
+        # filter out spaces and commas from region name
+        self.region_name = str.lower(str.replace(str.replace(region_name, ' ', '_'), ',', ''))
 
-        # create city-related file
-        self.dest_file_name = os.path.join(DEST, self.city_name + '.txt')
+        # create region-related file
+        self.dest_file_name = os.path.join(DEST, self.region_name + '.txt')
 
     def on_data(self, data):
         with open(self.dest_file_name, 'a') as dest:
@@ -96,7 +94,7 @@ class CityListener(StreamListener):
 
 
 def get_region_stream(region):
-    listener = CityListener(region)
+    listener = RegionListener(region)
     auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
     auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
     stream = Stream(auth, listener)
@@ -119,9 +117,9 @@ if __name__ == '__main__':
 
     import threading
 
-    REGIONS = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia-Romagna", "Friuli-Venezia Giulia",
+    REGIONS = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia Romagna", "Friuli Venezia Giulia",
                 "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia",
-                "Toscana", "Trentino-Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"]
+                "Toscana", "Trentino Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"]
 
     # create destination directory if not exists
     if not os.path.exists(DEST):
