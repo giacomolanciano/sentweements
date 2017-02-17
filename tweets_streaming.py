@@ -2,6 +2,7 @@ import json
 import os
 
 import geocoder
+import time
 from tweepy import OAuthHandler, Stream
 from tweepy.streaming import StreamListener
 
@@ -125,7 +126,9 @@ if __name__ == '__main__':
     if not os.path.exists(DEST):
         os.makedirs(DEST)
 
+    # Note: same key can be used by AT MOST TWO threads
     for region in REGIONS:
         region += ", Italy"
         t = threading.Thread(target=get_region_stream, args=(region,))
         t.start()
+        time.sleep(1)
