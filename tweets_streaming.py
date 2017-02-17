@@ -101,13 +101,13 @@ if __name__ == '__main__':
     if not os.path.exists(DEST):
         os.makedirs(DEST)
 
-    city = 'Lazio, Italy'
+    city = 'Abbruzzo, Italy'
     listener = CityListener(city)
     auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
     auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
     stream = Stream(auth, listener)
 
-    location = geocoder.osm(city)
+    location = geocoder.google(city)
     location_bbox = location.geojson['bbox']
     print('bbox: ' + str(location_bbox))
 
