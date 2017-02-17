@@ -95,19 +95,13 @@ class CityListener(StreamListener):
         return True
 
 
-if __name__ == '__main__':
-
-    # create destination directory if not exists
-    if not os.path.exists(DEST):
-        os.makedirs(DEST)
-
-    city = 'Lazio, Italy'
-    listener = CityListener(city)
+def get_region_stream(region):
+    listener = CityListener(region)
     auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
     auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
     stream = Stream(auth, listener)
 
-    location = geocoder.osm(city)
+    location = geocoder.osm(region)
     location_bbox = location.geojson['bbox']
     print('bbox: ' + str(location_bbox))
 
@@ -119,3 +113,21 @@ if __name__ == '__main__':
     # with open(os.path.join(DEST, 'rome_italy.txt'), 'r') as json_data:
     #     d = json.load(json_data)
     #     print(d)
+
+
+if __name__ == '__main__':
+
+    import threading
+
+    REGIONS = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia-Romagna", "Friuli-Venezia Giulia",
+                "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia",
+                "Toscana", "Trentino-Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"]
+
+    # create destination directory if not exists
+    if not os.path.exists(DEST):
+        os.makedirs(DEST)
+
+    for region in REGIONS:
+        region += ", Italy"
+        t = threading.Thread(target=get_region_stream, args=(region,))
+        t.start()
