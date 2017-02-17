@@ -127,14 +127,20 @@ if __name__ == '__main__':
     if not os.path.exists(DEST):
         os.makedirs(DEST)
 
-    i = 0
+    i, regions, end = 0, len(ITALIAN_REGIONS), False
     for ck, cs, at, ats in zip(TWITTER_CONSUMER_KEYS, TWITTER_CONSUMER_SECRETS, TWITTER_ACCESS_TOKENS,
                                TWITTER_ACCESS_TOKEN_SECRETS):
 
         for r in range(i, i + THREADS_PER_TWITTER_KEY):
+            if r >= regions:
+                end = True
+                break
             region = ITALIAN_REGIONS[r] + ", Italy"
             t = threading.Thread(target=get_region_stream, args=(region, ck, cs, at, ats))
             t.start()
             time.sleep(1)  # delay threads using the same key to prevent api error
+
+        if end:
+            break
 
         i += THREADS_PER_TWITTER_KEY
