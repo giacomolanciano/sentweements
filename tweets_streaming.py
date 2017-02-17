@@ -70,15 +70,15 @@ class ImageListener(StreamListener):
 class CityListener(StreamListener):
     """ Store a stream of tweets coming from given city. """
 
-    def __init__(self, city, print_progress=True):
+    def __init__(self, city_name, print_progress=True):
         super(CityListener, self).__init__()
         self.print_progress = print_progress
 
         # filter out spaces and commas from city name
-        self.city = str.lower(str.replace(str.replace(city, ' ', '_'), ',', ''))
+        self.city_name = str.lower(str.replace(str.replace(city_name, ' ', '_'), ',', ''))
 
         # create city-related file
-        self.dest_file_name = os.path.join(DEST, self.city + '.txt')
+        self.dest_file_name = os.path.join(DEST, self.city_name + '.txt')
 
     def on_data(self, data):
         with open(self.dest_file_name, 'a') as dest:
@@ -101,7 +101,7 @@ if __name__ == '__main__':
     if not os.path.exists(DEST):
         os.makedirs(DEST)
 
-    city = 'Rome, Italy'
+    city = 'Lazio, Italy'
     listener = CityListener(city)
     auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
     auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
