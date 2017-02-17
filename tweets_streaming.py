@@ -1,4 +1,5 @@
 import json
+import os
 
 import geocoder
 from tweepy import OAuthHandler, Stream
@@ -9,6 +10,8 @@ import statistics
 from secret_keys import EMOTION_API_KEY
 from secret_keys import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET
 from secret_keys import TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET
+
+DEST = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
 
 class ImageListener(StreamListener):
@@ -64,26 +67,55 @@ class ImageListener(StreamListener):
         return True
 
 
+class CityListener(StreamListener):
+    """ Store a stream of tweets coming from given city. """
+
+    def __init__(self, city, print_progress=True):
+        super(CityListener, self).__init__()
+        self.print_progress = print_progress
+
+        # filter out spaces and commas from city name
+        self.city = str.lower(str.replace(str.replace(city, ' ', '_'), ',', ''))
+
+        # create city-related file
+        self.dest_file_name = os.path.join(DEST, self.city + '.txt')
+
+    def on_data(self, data):
+        with open(self.dest_file_name, 'a') as dest:
+            dest.write(data.strip() + ',\n')
+
+        if self.print_progress:
+            print(data)
+
+        return True
+
+    def on_error(self, status):
+        if self.print_progress:
+            print(status)
+        return True
+
+
 if __name__ == '__main__':
-    listener = ImageListener()
+
+    # create destination directory if not exists
+    if not os.path.exists(DEST):
+        os.makedirs(DEST)
+
+    city = 'Rome, Italy'
+    listener = CityListener(city)
     auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
     auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
     stream = Stream(auth, listener)
 
+    location = geocoder.osm(city)
+    location_bbox = location.geojson['bbox']
+    print('bbox: '+location_bbox)
+
     # Twitter Streaming APIs let us filter tweets according to users, text, location, and languages.
     # The track, follow, and locations fields should be considered to be combined with an OR operator.
+    stream.filter(locations=location_bbox)
 
-    users = None
-    keywords = None
-    location = geocoder.osm('Italy')
-    location_bbox = location.geojson['bbox']
-    languages = None
-
-    while True:
-        try:
-            stream.filter(follow=users, track=keywords, locations=location_bbox, languages=languages)
-        except KeyboardInterrupt:
-            break
-        except Exception as e:
-            # print('ERROR: %s.' % str(e), '\n')
-            pass
+    # to read json from file
+    # with open(os.path.join(DEST, 'rome_italy.txt'), 'r') as json_data:
+    #     d = json.load(json_data)
+    #     print(d)
