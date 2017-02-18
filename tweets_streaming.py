@@ -3,14 +3,21 @@ import os
 
 import geocoder
 import time
+
+import sqlite3
 from tweepy import OAuthHandler, Stream
 from tweepy.streaming import StreamListener
+from datetime import datetime
 
 import emotions
 import statistics
 from secret_keys import *
 from constants import DATA_FOLDER
+from constants import DATABASE
+from text_sentiments import SentimentAnalysis
 
+TWITTER_DATETIME_FORMAT = '%a %b %d %H:%M:%S %z %Y'
+SQLITE_DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S.000'
 THREADS_PER_TWITTER_KEY = 2
 ITALIAN_REGIONS = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia Romagna", "Friuli Venezia Giulia",
                    "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia",
@@ -80,12 +87,43 @@ class RegionListener(StreamListener):
         # filter out spaces and commas from region name
         self.region_name = str.lower(str.replace(str.replace(region_name, ' ', '_'), ',', ''))
 
-        # create region-related file
-        self.dest_file_name = os.path.join(DATA_FOLDER, self.region_name + '.txt')
+        # create database connection
+        self.conn = sqlite3.connect(DATABASE)
+        self.cursor = self.conn.cursor()
+
+        # create sentiment analysis instance
+        self.sa = SentimentAnalysis()
 
     def on_data(self, data):
-        with open(self.dest_file_name, 'a') as dest:
-            dest.write(data.strip() + ',\n')
+
+        # to reuse method both with Twitter API and standalone
+        if isinstance(data, str):
+            tweet = json.loads(data)
+        else:
+            tweet = json.load(data)
+
+        id_str = tweet['id_str']
+        text = tweet['text']
+        lang = tweet['lang']
+
+        date_time = tweet['created_at']
+        dto = datetime.strptime(date_time, TWITTER_DATETIME_FORMAT)
+        date_time = dto.strftime(SQLITE_DATETIME_FORMAT)
+
+        try:
+            image_url = tweet['entities']['media'][0]['media_url']
+        except (KeyError, IndexError):
+            image_url = 'null'
+
+        # compute sentiment score
+        score = self.sa.get_sentiment_score(text)
+        if not score:
+            score = 'null'
+
+        # Insert a row of data in db
+        self.cursor.execute("INSERT INTO tweets VALUES (?,?,?,?,?,?,?)",
+                            (id_str, date_time, self.region_name, text, lang, image_url, score))
+        self.conn.commit()
 
         if self.print_progress:
             print(data)
@@ -119,8 +157,7 @@ def get_region_stream(region, twitter_consumer_key, twitter_consumer_secret, twi
     #     print(d)
 
 
-if __name__ == '__main__':
-
+def start_regions_streaming():
     import threading
 
     # create destination directory if not exists
@@ -144,3 +181,15 @@ if __name__ == '__main__':
             break
 
         i += THREADS_PER_TWITTER_KEY
+
+
+if __name__ == '__main__':
+
+    start_regions_streaming()
+
+    # r = RegionListener('abruzzo, italy')
+    # with open('data/abruzzo_italy.txt', 'r') as input:
+    #     line = input.readline()
+    #     for i in range(5):
+    #         r.on_data(line[:len(line)-2])
+    #         line = input.readline()

@@ -4,22 +4,22 @@ from constants import DATABASE
 
 if __name__ == '__main__':
 
-    # sqlite3 usage example
-
     conn = sqlite3.connect(DATABASE)
-
     c = conn.cursor()
 
-    # Create table
-    c.execute('''CREATE TABLE stocks
-                 (date text, trans text, symbol text, qty real, price real)''')
+    # Create tweets table
+    # c.execute('''CREATE TABLE tweets (id, datetime, region, text, lang, image_url, score)''')
 
-    # Insert a row of data
-    c.execute("INSERT INTO stocks VALUES ('2006-01-05','BUY','RHAT',100,35.14)")
+    # Delete tweets table
+    # c.execute('''DROP TABLE tweets''')
+
+    # Delete tweets tables rows
+    # c.execute('''DELETE FROM tweets''')
+
+    # Show tweets table
+    c.execute('''SELECT * FROM tweets''')
+    print(c.fetchall())
 
     # Save (commit) the changes
     conn.commit()
-
-    # We can also close the connection if we are done with it.
-    # Just be sure any changes have been committed or they will be lost.
     conn.close()
