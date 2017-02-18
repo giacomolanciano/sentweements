@@ -8,7 +8,7 @@ if __name__ == '__main__':
     c = conn.cursor()
 
     # Create tweets table
-    # c.execute('''CREATE TABLE tweets (id, datetime, region, text, lang, image_url, score)''')
+    # c.execute('''CREATE TABLE tweets (id_str PRIMARY KEY, datetime, region, text, lang, image_url, score)''')
 
     # Delete tweets table
     # c.execute('''DROP TABLE tweets''')
@@ -18,7 +18,8 @@ if __name__ == '__main__':
 
     # Show tweets table
     c.execute('''SELECT * FROM tweets''')
-    print(c.fetchall())
+    for row in c:
+        print(row)
 
     # Save (commit) the changes
     conn.commit()

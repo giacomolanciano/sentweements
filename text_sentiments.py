@@ -1,4 +1,5 @@
 import indicoio
+
 from secret_keys import *
 
 
@@ -15,15 +16,22 @@ class SentimentAnalysis(object):
 
         while not working_key:
             indicoio.config.api_key = INDICO_API_KEYS[self.key]
-            score = indicoio.sentiment(text)
-            if not isinstance(score, float):
-                if self.key <= SentimentAnalysis.max_key:
-                    self.key += 1
+
+            try:
+                score = indicoio.sentiment(text, language='detect')  # raises exception if language not supported
+
+                if not isinstance(score, float):
+                    if self.key <= SentimentAnalysis.max_key:
+                        self.key += 1
+                    else:
+                        self.key = 0
+                        return None
                 else:
-                    self.key = 0
-                    return None
-            else:
-                working_key = True
+                    working_key = True
+
+            except indicoio.IndicoError:
+                return None
+
         return score
 
 

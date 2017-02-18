@@ -18,6 +18,7 @@ from text_sentiments import SentimentAnalysis
 
 TWITTER_DATETIME_FORMAT = '%a %b %d %H:%M:%S %z %Y'
 SQLITE_DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S.000'
+SQLITE_NULL = 'NULL'
 THREADS_PER_TWITTER_KEY = 2
 ITALIAN_REGIONS = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia Romagna", "Friuli Venezia Giulia",
                    "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia",
@@ -113,17 +114,20 @@ class RegionListener(StreamListener):
         try:
             image_url = tweet['entities']['media'][0]['media_url']
         except (KeyError, IndexError):
-            image_url = 'null'
+            image_url = SQLITE_NULL
 
         # compute sentiment score
         score = self.sa.get_sentiment_score(text)
         if not score:
-            score = 'null'
+            score = SQLITE_NULL
 
-        # Insert a row of data in db
-        self.cursor.execute("INSERT INTO tweets VALUES (?,?,?,?,?,?,?)",
-                            (id_str, date_time, self.region_name, text, lang, image_url, score))
-        self.conn.commit()
+        try:
+            # Insert a row of data in db
+            self.cursor.execute("INSERT INTO tweets VALUES (?,?,?,?,?,?,?)",
+                                (id_str, date_time, self.region_name, text, lang, image_url, score))
+            self.conn.commit()
+        except sqlite3.IntegrityError:
+            return True
 
         if self.print_progress:
             print(data)
