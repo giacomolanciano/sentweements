@@ -22,4 +22,3 @@ To run the webapp (locally), open a terminal and type `$ python webapp.py`. Then
 |------------------|-------------------------------------|  
 |Fabio Rosato      |rosato.1565173@studenti.uniroma1.it  |  
 |Giacomo Lanciano  |lanciano.1487019@studenti.uniroma1.it|  
-|Francisco Ferreres|matakukos@gmail.com                  |   
