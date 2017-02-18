@@ -9,8 +9,8 @@ from tweepy.streaming import StreamListener
 import emotions
 import statistics
 from secret_keys import *
+from constants import DATA_FOLDER
 
-DEST = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 THREADS_PER_TWITTER_KEY = 2
 ITALIAN_REGIONS = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia Romagna", "Friuli Venezia Giulia",
                    "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia",
@@ -81,7 +81,7 @@ class RegionListener(StreamListener):
         self.region_name = str.lower(str.replace(str.replace(region_name, ' ', '_'), ',', ''))
 
         # create region-related file
-        self.dest_file_name = os.path.join(DEST, self.region_name + '.txt')
+        self.dest_file_name = os.path.join(DATA_FOLDER, self.region_name + '.txt')
 
     def on_data(self, data):
         with open(self.dest_file_name, 'a') as dest:
@@ -105,7 +105,7 @@ def get_region_stream(region, twitter_consumer_key, twitter_consumer_secret, twi
     auth.set_access_token(twitter_access_token, twitter_access_token_secret)
     stream = Stream(auth, listener)
 
-    location = geocoder.osm(region)
+    location = geocoder.google(region)
     location_bbox = location.geojson['bbox']
     print('bbox: ' + str(location_bbox))
 
@@ -124,8 +124,8 @@ if __name__ == '__main__':
     import threading
 
     # create destination directory if not exists
-    if not os.path.exists(DEST):
-        os.makedirs(DEST)
+    if not os.path.exists(DATA_FOLDER):
+        os.makedirs(DATA_FOLDER)
 
     i, regions, end = 0, len(ITALIAN_REGIONS), False
     for ck, cs, at, ats in zip(TWITTER_CONSUMER_KEYS, TWITTER_CONSUMER_SECRETS, TWITTER_ACCESS_TOKENS,
