@@ -76,23 +76,20 @@
 
         info.update = function(props) {
             this._div.innerHTML = '<h4>Average sentiment score</h4>' + (props ?
-                '<b>' + props.name + '</b><br />' + props.score + ' m<sup>2</sup>' :
+                '<b>' + props.name + '</b><br />' + props.score:
                 'Hover over a state');
         };
 
         info.addTo(map);
 
-
         // get color depending on sentiment score value
         function getColor(d) {
-            return d > 1000000 ? '#800026' :
-                d > 500000 ? '#BD0026' :
-                d > 200000 ? '#E31A1C' :
-                d > 100000 ? '#FC4E2A' :
-                d > 50000 ? '#FD8D3C' :
-                d > 20000 ? '#FEB24C' :
-                d > 10000 ? '#FED976' :
-                '#FFEDA0';
+            return d > 0.9 ? '#4575b4' :
+                d > 0.7 ? '#91bfdb' :
+                d > 0.5 ? '#e0f3f8' :
+                d > 0.3 ? '#fee090' :
+                d > 0.1 ? '#fc8d59' :
+                '#d73027';
         }
 
         function style(feature) {
@@ -167,7 +164,7 @@
         legend.onAdd = function(map) {
 
             var div = L.DomUtil.create('div', 'info legend'),
-                grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+                grades = [0, 0.1, 0.3, 0.5, 0.7, 0.9],
                 labels = [],
                 from, to;
 
@@ -176,7 +173,7 @@
                 to = grades[i + 1];
 
                 labels.push(
-                    '<i style="background:' + getColor(from + 1) + '"></i> ' +
+                    '<i style="background:' + getColor(from + 0.01) + '"></i> ' +
                     from + (to ? '&ndash;' + to : '+'));
             }
 
@@ -207,7 +204,7 @@
 
         getData(); // call to initialize map
 
-        window.setInterval(getData, 3000); // recurring call to update
+        window.setInterval(getData, 5000); // recurring call to update
     </script>
 
 
