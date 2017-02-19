@@ -19,9 +19,9 @@ if __name__ == '__main__':
     c = conn.cursor()
 
     # Create tables
-    # c.execute("CREATE TABLE tweets (id_str, region, datetime, text, lang, score, PRIMARY KEY (id_str, region))")
-    # c.execute("CREATE TABLE images (region , image_url, datetime, anger, contempt, disgust, fear, happiness, neutral,
-    #           sadness, surprise, PRIMARY KEY (region, image_url))")
+    c.execute('''CREATE TABLE IF NOT EXISTS tweets (id_str, region, datetime, text, lang, score, PRIMARY KEY (id_str, region))''')
+    c.execute('''CREATE TABLE IF NOT EXISTS images (region , image_url, datetime, anger, contempt, disgust, fear, happiness, neutral,
+              sadness, surprise, PRIMARY KEY (region, image_url))''')
 
     # Delete tables
     # c.execute("DROP TABLE tweets")
