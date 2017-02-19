@@ -1,6 +1,6 @@
-from secret_keys import EMOTION_API_KEY
 import requests
 import time
+from secret_keys import EMOTION_API_KEY
 
 EMOTION_API_URL = 'https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize'
 API_SUBSCR_HEADER_KEY = 'Ocp-Apim-Subscription-Key'

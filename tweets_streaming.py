@@ -136,8 +136,7 @@ class RegionListener(StreamListener):
                         print(image_sentiments)
                         print(image_scores)
 
-        except (KeyError, IndexError) as e:
-            print(e)
+        except (KeyError, IndexError):
             image_url = None
             image_scores = None
 
