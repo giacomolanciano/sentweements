@@ -37,22 +37,22 @@ if __name__ == '__main__':
     for row in c:
         print(row)
 
-    # print('\nimages')
-    # c.execute('''SELECT * FROM images''')
-    # for row in c:
-    #     print(row)
-
-    # test regions averages
-    date = '2017-02-17 20:21:00.000'
-
-    print('\nregion_score')
-    c.execute('''SELECT region, score FROM tweets WHERE datetime >= ? ''', (date,))
+    print('\nimages')
+    c.execute('''SELECT * FROM images''')
     for row in c:
         print(row)
 
-    print('\navg')
-    res = get_regions_averages(date)
-    print(res)
+    # test regions averages
+    # date = '2017-02-17 20:21:00.000'
+    #
+    # print('\nregion_score')
+    # c.execute('''SELECT region, score FROM tweets WHERE datetime >= ? ''', (date,))
+    # for row in c:
+    #     print(row)
+    #
+    # print('\navg')
+    # res = get_regions_averages(date)
+    # print(res)
 
     # Save (commit) the changes
     conn.commit()

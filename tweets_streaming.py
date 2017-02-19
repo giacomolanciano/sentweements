@@ -142,8 +142,8 @@ class RegionListener(StreamListener):
             image_scores = None
 
         # compute sentiment score
-        text_score = self.sa.get_sentiment_score(text)
         # text_score = None  # TODO avoid wasting api calls during tests
+        text_score = self.sa.get_sentiment_score(text)
         if not text_score:
             text_score = None
 
@@ -164,7 +164,7 @@ class RegionListener(StreamListener):
             return True
 
         if self.print_progress:
-            print(data)
+            print(json.dumps(tweet, indent=4))
 
         return True
 
