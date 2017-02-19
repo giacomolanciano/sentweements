@@ -1,6 +1,6 @@
-<p align="center"><img src="img/logo.jpg"width=40%/></p>
+<p align="center"><img src="img/logo.JPG"width=40%/></p>
 
-# Sentweements
+===
 Final project for [Data Mining](http://aris.me/index.php/data-mining-2016) course of MSc in Engineering in Computer Science
 at Università degli Studi di Roma "La Sapienza" (A.Y. 2016/2017).
 
@@ -13,7 +13,7 @@ Results are presented on the client side in a beautiful fashion.
 
 ## Technologies
 - Microsoft Emotion API - the artificial intelligence that detect emotions based on universal facial expressions.
-- Twitter Search API - give acces to indices of recent or popular Tweets.
+- Twitter Search API - give access to indices of recent or popular Tweets.
 - [Flask](http://flask.pocoo.org/) - microframework to build the webserver and serve client requests.
 - [SocketIO](http://socket.io/) - to build the pub-sub system to push notifications between client and server.
 
@@ -24,7 +24,7 @@ To run the webapp (locally), open a terminal and type `$ python webapp.py`. Then
 
 ## Developers
 
-|                  |                                     |
-|------------------|-------------------------------------|  
-|Fabio Rosato      |rosato.1565173@studenti.uniroma1.it  |  
-|Giacomo Lanciano  |lanciano.1487019@studenti.uniroma1.it|  
+|                |                                     |
+|----------------|-------------------------------------|  
+|Fabio Rosato    |rosato.1565173@studenti.uniroma1.it  |  
+|Giacomo Lanciano|lanciano.1487019@studenti.uniroma1.it|  
