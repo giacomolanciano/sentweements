@@ -134,7 +134,8 @@
 
         function onMouseOverRegion(feature) {
           highlightFeature(feature);
-          info.update(feature.properties);
+          var layer = feature.target;
+          info.update(layer.feature.properties);
           regionUnderCursor = layer;
         }
 
@@ -191,7 +192,10 @@
             var layer = regionFeatures['Lazio']
             layer.feature.properties.score += 10000;
             // geojson.resetStyle(layer);
-            info.update(layer.feature.properties);
+            layer.setStyle({fillColor: getColor(layer.feature.properties.score)});
+            if (regionUnderCursor == layer) {
+                info.update(layer.feature.properties);
+            }
         }
 
         window.setInterval(updateMapData, 3000);
