@@ -6,19 +6,15 @@ from tweepy import OAuthHandler, Cursor
 from tweepy.api import API
 
 import emotions
+from emotions import EmotionAnalysis
 import statistics
-from secret_keys import EMOTION_API_KEY
+from secret_keys import EMOTION_API_KEYS
 from secret_keys import TWITTER_ACCESS_TOKENS, TWITTER_ACCESS_TOKEN_SECRETS
 from secret_keys import TWITTER_CONSUMER_KEYS, TWITTER_CONSUMER_SECRETS
 
 auth = OAuthHandler(TWITTER_CONSUMER_KEYS[0], TWITTER_CONSUMER_SECRETS[0])
 auth.set_access_token(TWITTER_ACCESS_TOKENS[0], TWITTER_ACCESS_TOKEN_SECRETS[0])
 api_client = API(auth)
-
-# headers for Microsoft Emotion API request
-headers = dict()
-headers[emotions.API_SUBSCR_HEADER_KEY] = EMOTION_API_KEY
-headers[emotions.CONTENT_TYPE_HEADER_KEY] = emotions.CONTENT_TYPE_HEADER_VALUE
 
 
 class ImageRetriever(object):
@@ -52,6 +48,7 @@ class ImageRetriever(object):
 
         zeros = [0] * len(emotions.EMOTIONS)
         self.sentiments_mean = dict(zip(emotions.EMOTIONS, zeros))
+        self.ea = EmotionAnalysis()
 
     def search_api_request(self):
         # search allowed params:
@@ -77,7 +74,7 @@ class ImageRetriever(object):
                 print(image_url)
 
             # make Emotion API call
-            image_sentiments = emotions.process_request(image_url, headers)
+            image_sentiments = self.ea.process_request(image_url)
 
             if image_sentiments:
                 # process info about each face in image
