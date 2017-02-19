@@ -1,6 +1,6 @@
 <p align="center"><img src="img/logo.JPG"width=40%/></p>
 
-# Sentweements
+===
 Final project for [Data Mining](http://aris.me/index.php/data-mining-2016) course of MSc in Engineering in Computer Science
 at Università degli Studi di Roma "La Sapienza" (A.Y. 2016/2017).
 
