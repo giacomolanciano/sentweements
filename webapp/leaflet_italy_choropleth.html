@@ -7,11 +7,9 @@
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
     <style>
         #map {
@@ -133,16 +131,16 @@
         var regionUnderCursor;
 
         function onMouseOverRegion(feature) {
-          highlightFeature(feature);
-          var layer = feature.target;
-          info.update(layer.feature.properties);
-          regionUnderCursor = layer;
+            highlightFeature(feature);
+            var layer = feature.target;
+            info.update(layer.feature.properties);
+            regionUnderCursor = layer;
         }
 
         function onMouseOutRegion(feature) {
-          resetHighlight(feature);
-          info.update();
-          regionUnderCursor = null;
+            resetHighlight(feature);
+            info.update();
+            regionUnderCursor = null;
         }
 
         // need an object containing references to layers corresponding to
@@ -188,17 +186,28 @@
 
         legend.addTo(map);
 
-        function updateMapData() {
-            var layer = regionFeatures['Lazio']
-            layer.feature.properties.score += 10000;
-            // geojson.resetStyle(layer);
-            layer.setStyle({fillColor: getColor(layer.feature.properties.score)});
-            if (regionUnderCursor == layer) {
-                info.update(layer.feature.properties);
+        function updateMapData(data) {
+            for (var reg in data) {
+                var layer = regionFeatures[reg]
+                layer.feature.properties.score = data[reg];
+                layer.setStyle({
+                    fillColor: getColor(layer.feature.properties.score)
+                });
+                if (regionUnderCursor == layer) {
+                    info.update(layer.feature.properties);
+                }
             }
         }
 
-        window.setInterval(updateMapData, 3000);
+        function getData(date) {
+            $.get("italy_regions/", {
+                "date": date
+            }, updateMapData, 'json');
+        }
+
+        getData(); // call to initialize map
+
+        window.setInterval(getData, 3000); // recurring call to update
     </script>
 
 
