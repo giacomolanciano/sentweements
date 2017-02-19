@@ -1,6 +1,5 @@
 """ Module for basic statistic operations. """
-
-from emotions import SENTIMENTS
+from emotions import EMOTIONS
 
 DIGITS = 5
 
@@ -16,7 +15,7 @@ def online_sentiments_vectors_mean(curr_mean_vector, new_vector, sample_size):
     Note: side-effect on curr_mean_vector.
     """
 
-    for sentiment in SENTIMENTS:
+    for sentiment in EMOTIONS:
         delta = new_vector[sentiment] - curr_mean_vector[sentiment]
         curr_mean_vector[sentiment] += delta / sample_size
         curr_mean_vector[sentiment] = round(curr_mean_vector[sentiment], DIGITS)

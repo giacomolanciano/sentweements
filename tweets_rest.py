@@ -50,8 +50,8 @@ class ImageRetriever(object):
 
         self.sample_size = 0
 
-        zeros = [0] * emotions.SENTIMENTS_NUM
-        self.sentiments_mean = dict(zip(emotions.SENTIMENTS, zeros))
+        zeros = [0] * len(emotions.EMOTIONS)
+        self.sentiments_mean = dict(zip(emotions.EMOTIONS, zeros))
 
     def search_api_request(self):
         # search allowed params:

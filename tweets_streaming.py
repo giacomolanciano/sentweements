@@ -36,7 +36,7 @@ class ImageListener(StreamListener):
         super(ImageListener, self).__init__()
         self.print_progress = print_progress
         self.sample_size = 0
-        self.sentiments_mean = [0] * emotions.SENTIMENTS_NUM
+        self.sentiments_mean = [0] * len(emotions.EMOTIONS)
 
     def on_data(self, data):
         try:
@@ -84,7 +84,7 @@ class RegionListener(StreamListener):
     headers = dict()
     headers[emotions.API_SUBSCR_HEADER_KEY] = EMOTION_API_KEY
     headers[emotions.CONTENT_TYPE_HEADER_KEY] = emotions.CONTENT_TYPE_HEADER_VALUE
-    zeros = [0] * emotions.SENTIMENTS_NUM
+    zeros = [0] * len(emotions.EMOTIONS)
 
     def __init__(self, region_name, print_progress=True):
         super(RegionListener, self).__init__()
@@ -118,7 +118,7 @@ class RegionListener(StreamListener):
 
         try:
             image_url = tweet['entities']['media'][0]['media_url']
-            image_scores = dict(zip(emotions.SENTIMENTS, RegionListener.zeros))
+            image_scores = dict(zip(emotions.EMOTIONS, RegionListener.zeros))
 
             image_sentiments = emotions.process_request(image_url, RegionListener.headers)
             if image_sentiments:
