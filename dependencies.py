@@ -9,8 +9,6 @@ def install(package):
 if __name__ == '__main__':
     install('tweepy')
     install('flask')
-    install('flask_socketio')
-    install('eventlet')
     install('geocoder')
     install('requests')
     install('indicoio')
