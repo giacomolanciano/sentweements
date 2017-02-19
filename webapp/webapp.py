@@ -1,69 +1,36 @@
-import __init__
+from flask import Flask, send_file, request
 import json
 
-import eventlet
-from flask import Flask, render_template, send_file, request
-from flask_socketio import SocketIO
-
-from tweets_rest import ImageRetriever
-
-eventlet.monkey_patch()
+import __init__  # update Python PATH
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
-sio = SocketIO(app, async_mode='eventlet')
-
-threads = dict()
-
-
-def background_job(sid, query_params):
-    image_stream = ImageRetriever(sio, sid, query_params)
-    image_stream.search_api_request()
-
 
 @app.route('/')
 def index():
-    """Serve the client-side application."""
-    if len(request.args):  # we have at least a search argument
-        init_params = {
-            'query': request.args.get('query'),
-            'since_date': request.args.get('since_date'),
-            'until_date': request.args.get('until_date'),
-            'language': request.args.get('language'),
-            'location': request.args.get('location')
-        }
-        print(json.dumps(init_params))
-        # return the basic result page skeleton
-        return render_template('query_results.html', init_params=json.dumps(init_params))
-    else:
-        return send_file('index.html')  # return the homepage
+    return send_file('leaflet_italy_choropleth.html')
 
 
-@sio.on('connect')
-def on_connect():
-    sid = request.sid
-    print('Client connected:', sid)
+@app.route('/italy_regions.js')
+def italy_regions():
+    return send_file('italy_regions.js')
 
 
-@sio.on('init')
-def on_init(msg):
-    sid = request.sid
-    obj = json.loads(msg)
-    print('Client:', sid)
-    print('Params:', msg)
-    gt = eventlet.greenthread.spawn(background_job, sid, obj)
-    threads[sid] = gt
+@app.route('/italy_regions/')
+def italy_regions_get_data():
+    since = request.args.get('since')
+    if not since:
+        since = ''  # insert default date value here (e.g. 7 days ago)
 
+    # Query the db to obtain the data
+    db_response = ''
 
-@sio.on('disconnect')
-def on_disconnect():
-    sid = request.sid
-    print('Client disconnected:', sid)
+    # Parse the data into a dictionary
+    data = {}
 
-    # on disconnect we destroy the corresponding thread
-    gt = threads.pop(sid)
-    gt.kill()
+    # Dump to JSON string and send it
+    json_data = json.dumps(data)
+    return json_data
 
 
 if __name__ == '__main__':
-    sio.run(app, debug=True, port=5000)
+    app.run(debug=True, host='0.0.0.0')  # set debug to True to allow auto-reloading during development
