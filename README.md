@@ -18,7 +18,7 @@ Results are presented on the client side in a beautiful fashion.
 - [SocketIO](http://socket.io/) - to build the pub-sub system to push notifications between client and server.
 
 ## To run
-Be sure to have Python 3 installed, note that some additional Python modules are required.  
+Be sure to have **Python 3** installed. Note that some additional Python modules are required, you can run `dependencies.py` to install them all in one shot.  
 To run the webapp (locally), open a terminal and type `$ python webapp.py`. Then, open a browser and go to
 **localhost:5000**  (note that you still need a working Internet connection to download the tweets from Twitter).
 

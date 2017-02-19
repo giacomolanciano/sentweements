@@ -11,6 +11,7 @@ from datetime import datetime
 
 import emotions
 import statistics
+from emotions import EmotionAnalysis, CognitiveAPIError
 from secret_keys import *
 from constants import DATA_FOLDER
 from constants import DATABASE
@@ -27,16 +28,12 @@ ITALIAN_REGIONS = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia Roma
 class ImageListener(StreamListener):
     """ Perform sentiment analysis when a tweet is received. """
 
-    # headers for Microsoft Emotion API request
-    headers = dict()
-    headers[emotions.API_SUBSCR_HEADER_KEY] = EMOTION_API_KEY
-    headers[emotions.CONTENT_TYPE_HEADER_KEY] = emotions.CONTENT_TYPE_HEADER_VALUE
-
     def __init__(self, print_progress=True):
         super(ImageListener, self).__init__()
         self.print_progress = print_progress
         self.sample_size = 0
         self.sentiments_mean = [0] * len(emotions.EMOTIONS)
+        self.ea = EmotionAnalysis()
 
     def on_data(self, data):
         try:
@@ -48,7 +45,7 @@ class ImageListener(StreamListener):
             for image in media_contents:
                 image_url = image['media_url']
 
-                image_sentiments = emotions.process_request(image_url, ImageListener.headers)
+                image_sentiments = self.ea.process_request(image_url)
 
                 # process info about each face in image
                 for face_analysis in image_sentiments:
@@ -65,7 +62,7 @@ class ImageListener(StreamListener):
                 print(image_sentiments)
                 print('')
 
-        except KeyError as e:
+        except KeyError:
             # print('Missing %s key in json.' % str(e), '\n')
             pass
 
@@ -80,10 +77,6 @@ class ImageListener(StreamListener):
 class RegionListener(StreamListener):
     """ Store a stream of tweets coming from given city. """
 
-    # headers for Microsoft Emotion API request
-    headers = dict()
-    headers[emotions.API_SUBSCR_HEADER_KEY] = EMOTION_API_KEY
-    headers[emotions.CONTENT_TYPE_HEADER_KEY] = emotions.CONTENT_TYPE_HEADER_VALUE
     zeros = [0] * len(emotions.EMOTIONS)
 
     def __init__(self, region_name, print_progress=True):
@@ -99,6 +92,7 @@ class RegionListener(StreamListener):
 
         # create sentiment analysis instance
         self.sa = SentimentAnalysis()
+        self.ea = EmotionAnalysis()
 
     def on_data(self, data):
 
@@ -120,9 +114,9 @@ class RegionListener(StreamListener):
             image_url = tweet['entities']['media'][0]['media_url']
             image_scores = dict(zip(emotions.EMOTIONS, RegionListener.zeros))
 
-            image_sentiments = emotions.process_request(image_url, RegionListener.headers)
-            if image_sentiments:
+            image_sentiments = self.ea.process_request(image_url)
 
+            if image_sentiments:
                 sample_size = 0
 
                 # process info about each face in image, compute mean vector
@@ -135,14 +129,15 @@ class RegionListener(StreamListener):
                     if self.print_progress:
                         print(image_sentiments)
                         print(image_scores)
+            else:
+                for key in image_scores.keys():
+                    image_scores[key] = None
 
-        except (KeyError, IndexError) as e:
-            print(e)
+        except (KeyError, IndexError, CognitiveAPIError):
             image_url = None
             image_scores = None
 
         # compute sentiment score
-        # text_score = None  # TODO avoid wasting api calls during tests
         text_score = self.sa.get_sentiment_score(text)
         if not text_score:
             text_score = None
@@ -189,11 +184,6 @@ def get_region_stream(region, twitter_consumer_key, twitter_consumer_secret, twi
     # The track, follow, and locations fields should be considered to be combined with an OR operator.
     stream.filter(locations=location_bbox)
 
-    # to read json from file
-    # with open(os.path.join(DEST, 'rome_italy.txt'), 'r') as json_data:
-    #     d = json.load(json_data)
-    #     print(d)
-
 
 def start_regions_streaming():
     import threading
@@ -225,9 +215,15 @@ if __name__ == '__main__':
 
     start_regions_streaming()
 
+    # to use RegionListener standalone
     # r = RegionListener('abruzzo, italy')
     # with open('data/abruzzo_italy.txt', 'r') as input:
     #     line = input.readline()
     #     for i in range(5):
     #         r.on_data(line[:len(line)-2])
     #         line = input.readline()
+
+    # to read json from file
+    # with open(os.path.join(DEST, 'rome_italy.txt'), 'r') as json_data:
+    #     d = json.load(json_data)
+    #     print(d)
