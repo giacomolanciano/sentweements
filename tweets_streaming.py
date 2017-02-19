@@ -23,6 +23,7 @@ THREADS_PER_TWITTER_KEY = 2
 ITALIAN_REGIONS = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia Romagna", "Friuli Venezia Giulia",
                    "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia",
                    "Toscana", "Trentino Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"]
+ITALIAN_NATION = ', Italy'
 
 
 class ImageListener(StreamListener):
@@ -84,7 +85,7 @@ class RegionListener(StreamListener):
         self.print_progress = print_progress
 
         # filter out spaces and commas from region name
-        self.region_name = str.lower(str.replace(str.replace(region_name, ' ', '_'), ',', ''))
+        self.region_name = region_name
 
         # create database connection
         self.conn = sqlite3.connect(DATABASE)
@@ -169,14 +170,14 @@ class RegionListener(StreamListener):
         return True
 
 
-def get_region_stream(region, twitter_consumer_key, twitter_consumer_secret, twitter_access_token,
+def get_region_stream(region, nation, twitter_consumer_key, twitter_consumer_secret, twitter_access_token,
                       twitter_access_token_secret):
     listener = RegionListener(region)
     auth = OAuthHandler(twitter_consumer_key, twitter_consumer_secret)
     auth.set_access_token(twitter_access_token, twitter_access_token_secret)
     stream = Stream(auth, listener)
 
-    location = geocoder.google(region)
+    location = geocoder.google(region + nation)
     location_bbox = location.geojson['bbox']
     print('bbox: ' + str(location_bbox))
 
@@ -200,8 +201,7 @@ def start_regions_streaming():
             if r >= regions:
                 end = True
                 break
-            region = ITALIAN_REGIONS[r] + ", Italy"
-            t = threading.Thread(target=get_region_stream, args=(region, ck, cs, at, ats))
+            t = threading.Thread(target=get_region_stream, args=(ITALIAN_REGIONS[r], ITALIAN_NATION, ck, cs, at, ats))
             t.start()
             time.sleep(1)  # delay threads using the same key to prevent api error
 
