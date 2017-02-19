@@ -18,7 +18,6 @@ from text_sentiments import SentimentAnalysis
 
 TWITTER_DATETIME_FORMAT = '%a %b %d %H:%M:%S %z %Y'
 SQLITE_DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S.000'
-SQLITE_NULL = 'NULL'
 THREADS_PER_TWITTER_KEY = 2
 ITALIAN_REGIONS = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia Romagna", "Friuli Venezia Giulia",
                    "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia",
@@ -81,6 +80,12 @@ class ImageListener(StreamListener):
 class RegionListener(StreamListener):
     """ Store a stream of tweets coming from given city. """
 
+    # headers for Microsoft Emotion API request
+    headers = dict()
+    headers[emotions.API_SUBSCR_HEADER_KEY] = EMOTION_API_KEY
+    headers[emotions.CONTENT_TYPE_HEADER_KEY] = emotions.CONTENT_TYPE_HEADER_VALUE
+    zeros = [0] * emotions.SENTIMENTS_NUM
+
     def __init__(self, region_name, print_progress=True):
         super(RegionListener, self).__init__()
         self.print_progress = print_progress
@@ -113,24 +118,53 @@ class RegionListener(StreamListener):
 
         try:
             image_url = tweet['entities']['media'][0]['media_url']
-        except (KeyError, IndexError):
-            image_url = SQLITE_NULL
+            image_scores = dict(zip(emotions.SENTIMENTS, RegionListener.zeros))
+
+            image_sentiments = emotions.process_request(image_url, RegionListener.headers)
+            if image_sentiments:
+
+                sample_size = 0
+
+                # process info about each face in image, compute mean vector
+                for face_analysis in image_sentiments:
+                    # update sentiments mean
+                    sample_size += 1
+                    scores = face_analysis['scores']
+                    statistics.online_sentiments_vectors_mean(image_scores, scores, sample_size)
+
+                    if self.print_progress:
+                        print(image_sentiments)
+                        print(image_scores)
+
+        except (KeyError, IndexError) as e:
+            print(e)
+            image_url = None
+            image_scores = None
 
         # compute sentiment score
-        score = self.sa.get_sentiment_score(text)
-        if not score:
-            score = SQLITE_NULL
+        # text_score = None  # TODO avoid wasting api calls during tests
+        text_score = self.sa.get_sentiment_score(text)
+        if not text_score:
+            text_score = None
 
         try:
             # Insert a row of data in db
-            self.cursor.execute("INSERT INTO tweets VALUES (?,?,?,?,?,?,?)",
-                                (id_str, date_time, self.region_name, text, lang, image_url, score))
+            self.cursor.execute("INSERT INTO tweets VALUES (?,?,?,?,?,?)",
+                                (id_str, self.region_name, date_time, text, lang, text_score))
+
+            if image_url:
+                self.cursor.execute("INSERT INTO images VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                                    (self.region_name, image_url, date_time, image_scores['anger'],
+                                     image_scores['contempt'], image_scores['disgust'], image_scores['fear'],
+                                     image_scores['happiness'], image_scores['neutral'], image_scores['sadness'],
+                                     image_scores['surprise']))
+
             self.conn.commit()
         except sqlite3.IntegrityError:
             return True
 
         if self.print_progress:
-            print(data)
+            print(json.dumps(tweet, indent=4))
 
         return True
 
