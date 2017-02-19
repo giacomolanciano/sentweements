@@ -1,5 +1,4 @@
-<p align="center"><img src="https://portalstoragewuprod2.azureedge.net/media/Default/Media/EmotionAPI/Emotion%20API-01-1.svg"
-width=40%/></p>
+<p align="center"><img src="img/logo.jpg"width=40%/></p>
 
 # Sentweements
 Final project for [Data Mining](http://aris.me/index.php/data-mining-2016) course of MSc in Engineering in Computer Science

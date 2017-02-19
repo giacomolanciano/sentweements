@@ -8,11 +8,11 @@ from tweepy.api import API
 import emotions
 import statistics
 from secret_keys import EMOTION_API_KEY
-from secret_keys import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET
-from secret_keys import TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET
+from secret_keys import TWITTER_ACCESS_TOKENS, TWITTER_ACCESS_TOKEN_SECRETS
+from secret_keys import TWITTER_CONSUMER_KEYS, TWITTER_CONSUMER_SECRETS
 
-auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
-auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
+auth = OAuthHandler(TWITTER_CONSUMER_KEYS[0], TWITTER_CONSUMER_SECRETS[0])
+auth.set_access_token(TWITTER_ACCESS_TOKENS[0], TWITTER_ACCESS_TOKEN_SECRETS[0])
 api_client = API(auth)
 
 # headers for Microsoft Emotion API request
