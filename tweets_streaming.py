@@ -185,7 +185,7 @@ def get_region_stream(region, nation, twitter_consumer_key, twitter_consumer_sec
     location_bbox = location.geojson['bbox']
     # print('{} bbox: {}'.format(region, str(location_bbox)));
 
-    print('### {} thread is running ###'.format(region, str(location_bbox)));
+    print('### {} thread is running ###'.format(region, str(location_bbox)))
 
     # Twitter Streaming APIs let us filter tweets according to users, text, location, and languages.
     # The track, follow, and locations fields should be considered to be combined with an OR operator.
