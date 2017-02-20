@@ -29,9 +29,10 @@ ITALIAN_NATION = ', Italy'
 class ImageListener(StreamListener):
     """ Perform sentiment analysis when a tweet is received. """
 
-    def __init__(self, print_progress=True):
+    def __init__(self, print_progress=False, debug=True):
         super(ImageListener, self).__init__()
         self.print_progress = print_progress
+        self.debug = debug
         self.sample_size = 0
         self.sentiments_mean = [0] * len(emotions.EMOTIONS)
         self.ea = EmotionAnalysis()
@@ -70,7 +71,7 @@ class ImageListener(StreamListener):
         return True
 
     def on_error(self, status):
-        if self.print_progress:
+        if self.debug:
             print(status)
         return True
 
@@ -80,9 +81,10 @@ class RegionListener(StreamListener):
 
     zeros = [0] * len(emotions.EMOTIONS)
 
-    def __init__(self, region_name, print_progress=True):
+    def __init__(self, region_name, print_progress=False, debug=True):
         super(RegionListener, self).__init__()
         self.print_progress = print_progress
+        self.debug = debug
 
         # filter out spaces and commas from region name
         self.region_name = region_name
@@ -165,7 +167,7 @@ class RegionListener(StreamListener):
         return True
 
     def on_error(self, status):
-        if self.print_progress:
+        if self.debug:
             print(status)
         return True
 
@@ -179,7 +181,9 @@ def get_region_stream(region, nation, twitter_consumer_key, twitter_consumer_sec
 
     location = geocoder.google(region + nation)
     location_bbox = location.geojson['bbox']
-    print('bbox: ' + str(location_bbox))
+    # print('{} bbox: {}'.format(region, str(location_bbox)));
+
+    print('### {} thread is running ###'.format(region, str(location_bbox)));
 
     # Twitter Streaming APIs let us filter tweets according to users, text, location, and languages.
     # The track, follow, and locations fields should be considered to be combined with an OR operator.

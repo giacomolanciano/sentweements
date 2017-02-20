@@ -7,8 +7,9 @@ class SentimentAnalysis(object):
 
     max_key = len(INDICO_API_KEYS) - 1
 
-    def __init__(self):
+    def __init__(self, debug=True):
         self.key = 0
+        self.debug = debug
 
     def get_sentiment_score(self, text):
         while True:
@@ -19,7 +20,8 @@ class SentimentAnalysis(object):
                 break
 
             except indicoio.IndicoError as e:
-                print("IndicoError occurred: {}".format(e))
+                if self.debug:
+                    print("IndicoError occurred: {}".format(e))
                 if self.key <= SentimentAnalysis.max_key:
                     self.key += 1
                 else:
