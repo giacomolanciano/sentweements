@@ -361,3 +361,6 @@ fabric.properties
 
 # private files
 secret_keys.py
+
+# internal db
+data/*
