@@ -11,26 +11,20 @@ class SentimentAnalysis(object):
         self.key = 0
 
     def get_sentiment_score(self, text):
-        score = None
-        working_key = False
-
-        while not working_key:
+        while True:
             indicoio.config.api_key = INDICO_API_KEYS[self.key]
 
             try:
-                score = indicoio.sentiment(text, language='detect')  # raises exception if language not supported
+                score = indicoio.sentiment_hq(text, language='detect')  # raises exception if language not supported
+                break
 
-                if not isinstance(score, float):
-                    if self.key <= SentimentAnalysis.max_key:
-                        self.key += 1
-                    else:
-                        self.key = 0
-                        return None
+            except indicoio.IndicoError as e:
+                print("IndicoError occurred: {}".format(e))
+                if self.key <= SentimentAnalysis.max_key:
+                    self.key += 1
                 else:
-                    working_key = True
-
-            except indicoio.IndicoError:
-                return None
+                    self.key = 0
+                    raise indicoio.IndicoError("Monthly limit exceeded for ALL keys.")
 
         return score
 
