@@ -17,7 +17,11 @@
             padding: 0;
             margin: 0;
         }
-        html, body, .container-fluid, #map {
+
+        html,
+        body,
+        .container-fluid,
+        #map {
             height: 100%;
             width: 100%;
         }
@@ -31,11 +35,19 @@
             border-radius: 5px;
         }
 
+        .region-info {
+            min-width: 210px;
+        }
+
         .info h4 {
             font-size: 18px;
             margin: 0 0 5px;
             font-weight: bold;
             color: #777;
+        }
+
+        .info p {
+            margin: 10px 0 0 0;
         }
 
         .legend {
@@ -75,25 +87,33 @@
 
         L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
             maxZoom: 18,
-            attribution:  '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, ' +
-                          '&copy; <a href = "https://carto.com/attribution" > CARTO < /a>'
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, ' +
+                '&copy; <a href = "https://carto.com/attribution" > CARTO < /a>'
         }).addTo(map);
-
 
         // control that shows state info on hover
         var info = L.control();
+        var global_tweet_count = 0;
+        var global_average_score = 0;
 
         info.onAdd = function(map) {
-            this._div = L.DomUtil.create('div', 'info');
+            this._div = L.DomUtil.create('div', 'info region-info');
             this.update();
             return this._div;
         };
 
         info.update = function(props) {
-            this._div.innerHTML = '<h4>Average sentiment score</h4>' + (props ?
-                '<b>' + props.name + '</b><br />' + props.score :
-                'Hover over a state');
-        };
+            if (props) {
+                this._div.innerHTML = '<h4>' + props.name + '</h4>' +
+                    '<p><b>Tweets examined: </b>' + props.count + '<br />' +
+                    '<b>Average score: </b>' + props.score + '</p>';
+            } else {
+                this._div.innerHTML = '<h4>Italy</h4>' +
+                    '<p><b>Tweets examined: </b>' + global_tweet_count + '<br />' +
+                    '<b>Average score: </b>' + global_average_score + '<br /></p>' +
+                    '<p><small>Hover over a region for details.</small></p>';
+            }
+        }
 
         info.addTo(map);
 
@@ -217,16 +237,32 @@
 
         legend.addTo(map);
 
+        function roundTo3(num) {
+            return +(Math.round(num + "e+3") + "e-3");
+        }
+
         function updateMapData(data) {
+            var total_tweets = 0;
+            var total_score = 0;
             for (var reg in data) {
-                var layer = regionFeatures[reg]
-                layer.feature.properties.score = data[reg];
+                var tweets = data[reg][0];
+                var score = roundTo3(data[reg][1]);
+                var layer = regionFeatures[reg];
+                layer.feature.properties.count = tweets;
+                layer.feature.properties.score = score;
                 layer.setStyle({
-                    fillColor: getColor(layer.feature.properties.score)
+                    fillColor: getColor(score)
                 });
                 if (regionUnderCursor == layer) {
                     info.update(layer.feature.properties);
                 }
+                total_tweets += tweets;
+                total_score += tweets * score;
+            }
+            global_tweet_count = total_tweets;
+            global_average_score = total_score ? roundTo3(total_score / total_tweets) : 0;
+            if (!regionUnderCursor) {
+                info.update();
             }
         }
 
@@ -238,7 +274,7 @@
 
         getData(); // call to initialize map
 
-        window.setInterval(getData, 5000); // recurring call to update
+        window.setInterval(getData, 10000); // recurring call to update
     </script>
 </body>
 
