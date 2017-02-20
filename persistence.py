@@ -2,13 +2,14 @@ import sqlite3
 from constants import DATABASE
 
 
-def get_regions_averages(date_time):
+def get_regions_stats(date_time):
     result = {}
     connection = sqlite3.connect(DATABASE)
     cursor = connection.cursor()
-    cursor.execute("SELECT region, ROUND(AVG(score), 5) FROM tweets WHERE datetime >= ? GROUP BY region", (date_time,))
+    cursor.execute("SELECT region, ROUND(AVG(score), 5), COUNT(*) FROM tweets WHERE datetime >= ? GROUP BY region",
+                   (date_time,))
     for res_tuple in cursor:
-        result[res_tuple[0]] = res_tuple[1]
+        result[res_tuple[0]] = [res_tuple[1], res_tuple[2]]
     connection.close()
     return result
 
@@ -45,13 +46,13 @@ if __name__ == '__main__':
     # test regions averages
     date = '2017-02-17 20:21:00.000'
 
-    print('\nregion_score')
-    c.execute("SELECT region, score FROM tweets WHERE datetime >= ?", (date,))
-    for row in c:
-        print(row)
+    # print('\nregion_score')
+    # c.execute("SELECT region, score FROM tweets WHERE datetime >= ?", (date,))
+    # for row in c:
+    #     print(row)
 
     print('\navg')
-    res = get_regions_averages(date)
+    res = get_regions_stats(date)
     print(res)
 
     # Save (commit) the changes
