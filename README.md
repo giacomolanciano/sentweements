@@ -22,6 +22,8 @@ Be sure to have **Python 3** installed. Note that some additional Python modules
 To run the webapp (locally), open a terminal and type `$ python webapp.py`. Then, open a browser and go to
 **localhost:5000**  (note that you still need a working Internet connection to download the tweets from Twitter).
 
+<br><p align="center" href="https://gyazo.com/0eabb771ee5875242b2e473aef9ec40b"><img src="https://i.gyazo.com/0eabb771ee5875242b2e473aef9ec40b.gif" alt="https://gyazo.com/0eabb771ee5875242b2e473aef9ec40b" width="50%"/></p>
+
 ## Developers
 
 |                |                                     |
