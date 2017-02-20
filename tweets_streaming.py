@@ -89,10 +89,6 @@ class RegionListener(StreamListener):
         # filter out spaces and commas from region name
         self.region_name = region_name
 
-        # create database connection
-        self.conn = sqlite3.connect(DATABASE)
-        self.cursor = self.conn.cursor()
-
         # create sentiment analysis instance
         self.sa = SentimentAnalysis()
         self.ea = EmotionAnalysis()
@@ -145,20 +141,26 @@ class RegionListener(StreamListener):
         if not text_score:
             text_score = None
 
+        conn = sqlite3.connect(DATABASE)
         try:
+            # create database connection
+            cursor = conn.cursor()
+
             # Insert a row of data in db
-            self.cursor.execute("INSERT INTO tweets VALUES (?,?,?,?,?,?)",
-                                (id_str, self.region_name, date_time, text, lang, text_score))
+            cursor.execute("INSERT INTO tweets VALUES (?,?,?,?,?,?)",
+                           (id_str, self.region_name, date_time, text, lang, text_score))
 
             if image_url:
-                self.cursor.execute("INSERT INTO images VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-                                    (self.region_name, image_url, date_time, image_scores['anger'],
-                                     image_scores['contempt'], image_scores['disgust'], image_scores['fear'],
-                                     image_scores['happiness'], image_scores['neutral'], image_scores['sadness'],
-                                     image_scores['surprise']))
+                cursor.execute("INSERT INTO images VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                               (self.region_name, image_url, date_time, image_scores['anger'],
+                                image_scores['contempt'], image_scores['disgust'], image_scores['fear'],
+                                image_scores['happiness'], image_scores['neutral'], image_scores['sadness'],
+                                image_scores['surprise']))
 
-            self.conn.commit()
+            conn.commit()
+            conn.close()
         except sqlite3.IntegrityError:
+            conn.close()
             return True
 
         if self.print_progress:
@@ -216,7 +218,6 @@ def start_regions_streaming():
 
 
 if __name__ == '__main__':
-
     start_regions_streaming()
 
     # to use RegionListener standalone
