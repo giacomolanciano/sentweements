@@ -6,7 +6,7 @@ def get_regions_stats(date_time):
     result = {}
     connection = sqlite3.connect(DATABASE)
     cursor = connection.cursor()
-    cursor.execute("SELECT region, COUNT(*), ROUND(AVG(score), 5) FROM tweets WHERE datetime >= ? GROUP BY region",
+    cursor.execute("SELECT region, COUNT(*), AVG(score) FROM tweets WHERE datetime >= ? GROUP BY region",
                    (date_time,))
     for res_tuple in cursor:
         result[res_tuple[0]] = [res_tuple[1], res_tuple[2]]
