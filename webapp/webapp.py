@@ -32,7 +32,7 @@ def italy_regions_get_data():
         since = datetime.today() - timedelta(days=DEFAULT_SINCE)
 
     # Query the db to obtain the data
-    db_response = persistence.get_regions_averages(since.strftime(SQLITE_DATETIME_FORMAT))
+    db_response = persistence.get_regions_stats(since.strftime(SQLITE_DATETIME_FORMAT))
 
     # Dump to JSON string and send it
     json_data = json.dumps(db_response)
