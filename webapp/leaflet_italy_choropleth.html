@@ -330,13 +330,11 @@
             $("#sincePicker").on("dp.change", function (e) {
                 $('#untilPicker').data("DateTimePicker").minDate(e.date);
                 since = e.date ? e.date.format(formatStr) : null;
-                console.log(since);
                 getData(); // query the server
             });
             $("#untilPicker").on("dp.change", function (e) {
                 $('#sincePicker').data("DateTimePicker").maxDate(e.date);
                 until = e.date ? e.date.format(formatStr) : null;
-                console.log(until);
                 getData(); // query the server
             });
         });
