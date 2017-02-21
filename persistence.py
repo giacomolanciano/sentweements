@@ -1,13 +1,15 @@
 import sqlite3
 from constants import DATABASE
+from datetime import datetime
+from tweets_streaming import SQLITE_DATETIME_FORMAT
 
 
-def get_regions_stats(date_time):
+def get_regions_stats(since_date_time, until_date_time):
     result = {}
     connection = sqlite3.connect(DATABASE)
     cursor = connection.cursor()
-    cursor.execute("SELECT region, COUNT(*), AVG(score) FROM tweets WHERE datetime >= ? GROUP BY region",
-                   (date_time,))
+    cursor.execute('''SELECT region, COUNT(*), AVG(score) FROM tweets WHERE datetime >= ? AND datetime <= ?
+                   GROUP BY region''', (since_date_time, until_date_time))
     for res_tuple in cursor:
         result[res_tuple[0]] = [res_tuple[1], res_tuple[2]]
     connection.close()
@@ -44,13 +46,15 @@ if __name__ == '__main__':
     #     print(row)
 
     # test regions averages
-    date = '2017-02-17 20:21:00.000'
+    since_date = '2017-02-17 20:21:00.000'
+    until_date = datetime.now().strftime(SQLITE_DATETIME_FORMAT)
+    print(until_date)
     # print('\nregion_score')
     # c.execute("SELECT region, score FROM tweets WHERE datetime >= ?", (date,))
     # for row in c:
     #     print(row)
     print('\navg')
-    res = get_regions_stats(date)
+    res = get_regions_stats(since_date, until_date)
     print(res)
 
     # Save (commit) the changes
