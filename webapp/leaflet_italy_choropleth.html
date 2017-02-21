@@ -9,6 +9,9 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.45/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.45/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
 
@@ -26,28 +29,57 @@
             width: 100%;
         }
 
-        .info {
-            padding: 6px 8px;
-            font: 16px/18px Arial, Helvetica, sans-serif;
-            background: white;
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
+        .control-box {
+          padding: 6px 8px;
+          border-radius: 5px;
         }
 
-        .region-info {
+        .info {
+            font: 16px/18px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .date-box {
+            display: flex;
+            flex-flow: row, nowrap;
+            justify-content: space-between;
+            align-content: center;
+            align-items: center;
+        }
+
+        #sinceDiv {
+            margin-bottom: 5px;
+        }
+
+        #sincePicker, #untilPicker {
+          max-width: 200px;
+        }
+
+        .date-box label {
+            margin: 0 10px 0 0;
+        }
+
+        .logo {
+            font: 3.5rem 'Pacifico', cursive;
+            background: rgba(255, 255, 255, 0);
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .region-box {
             min-width: 210px;
         }
 
         .info h4 {
             font-size: 18px;
-            margin: 0 0 5px;
+            margin: 5px 0;
             font-weight: bold;
             color: #777;
         }
 
         .info p {
-            margin: 10px 0 0 0;
+            margin: 7px 0 0 0;
         }
 
         .legend {
@@ -75,7 +107,7 @@
     <script type="text/javascript" src="italy_regions.js"></script>
 
     <script type="text/javascript">
-        var map = L.map('map').setView([41.500, 12.634], 6);
+        var map = L.map('map', {zoomControl: false}).setView([42.057, 11.514], 6);
 
         // L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
         //     maxZoom: 18,
@@ -86,7 +118,8 @@
         // }).addTo(map);
 
         L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-            maxZoom: 18,
+            maxZoom: 10,
+            minZoom: 6,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, ' +
                 '&copy; <a href = "https://carto.com/attribution" > CARTO </a>'
         }).addTo(map);
@@ -97,7 +130,7 @@
         var global_average_score = 0;
 
         info.onAdd = function(map) {
-            this._div = L.DomUtil.create('div', 'info region-info');
+            this._div = L.DomUtil.create('div', 'control-box info region-box');
             this.update();
             return this._div;
         };
@@ -105,12 +138,12 @@
         info.update = function(props) {
             if (props) {
                 this._div.innerHTML = '<h4>' + props.name + '</h4>' +
-                    '<p><b>Tweets examined: </b>' + props.count + '<br />' +
-                    '<b>Average score: </b>' + props.score + '</p>';
+                    '<p><b>Tweets examined: </b>' + props.count + '</p>' +
+                    '<p><b>Average score: </b>' + props.score + '</p>';
             } else {
                 this._div.innerHTML = '<h4>Italy</h4>' +
-                    '<p><b>Tweets examined: </b>' + global_tweet_count + '<br />' +
-                    '<b>Average score: </b>' + global_average_score + '<br /></p>' +
+                    '<p><b>Tweets examined: </b>' + global_tweet_count + '</p>' +
+                    '<p><b>Average score: </b>' + global_average_score + '</p>' +
                     '<p><small>Hover over a region for details.</small></p>';
             }
         }
@@ -216,8 +249,7 @@
         });
 
         legend.onAdd = function(map) {
-
-            var div = L.DomUtil.create('div', 'info legend'),
+            var div = L.DomUtil.create('div', 'control-box info legend'),
                 grades = [0, 0.1, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9],
                 labels = [],
                 from, to;
@@ -237,6 +269,78 @@
 
         legend.addTo(map);
 
+        var logo = L.control({
+            position: 'bottomleft'
+        });
+
+        logo.onAdd = function(map) {
+            var div = L.DomUtil.create('div', 'control-box logo');
+
+            div.innerHTML = 'Sentweements';
+            return div;
+        };
+
+        logo.addTo(map);
+
+        var date_picker = L.control({
+            position: 'topleft'
+        });
+
+        date_picker.onAdd = function(map) {
+            var div = L.DomUtil.create('div', 'control-box info');
+
+            L.DomEvent.disableClickPropagation(div);
+
+            div.innerHTML = ` <div class="form-inline date-box" id="sinceDiv">
+                                <label for="sinceDate">Since</label>
+                                <div class="input-group date" id="sincePicker">
+                                  <input type="text" class="form-control" id="sinceDate">
+                                  <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="form-inline date-box" id="untilDiv">
+                                <label for="untilDate">Until</label>
+                                <div class="input-group date" id="untilPicker">
+                                  <input type="text" class="form-control" id="untilDate">
+                                  <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                  </span>
+                                </div>
+                              </div>`;
+            return div;
+        };
+
+        date_picker.addTo(map);
+
+        var since = null;
+        var until = null;
+
+        $(function () {
+            var formatStr = 'Y-MM-DD HH:mm:ss';
+            $('#sincePicker').datetimepicker({
+                useCurrent: false, //Important! See issue #1075
+                format: formatStr
+            });
+            $('#untilPicker').datetimepicker({
+                useCurrent: false, //Important! See issue #1075
+                format: formatStr
+            });
+            $("#sincePicker").on("dp.change", function (e) {
+                $('#untilPicker').data("DateTimePicker").minDate(e.date);
+                since = e.date ? e.date.format(formatStr) : null;
+                console.log(since);
+                getData(); // query the server
+            });
+            $("#untilPicker").on("dp.change", function (e) {
+                $('#sincePicker').data("DateTimePicker").maxDate(e.date);
+                until = e.date ? e.date.format(formatStr) : null;
+                console.log(until);
+                getData(); // query the server
+            });
+        });
+
         function roundTo3(num) {
             return +(Math.round(num + "e+3") + "e-3");
         }
@@ -244,9 +348,13 @@
         function updateMapData(data) {
             var total_tweets = 0;
             var total_score = 0;
-            for (var reg in data) {
-                var tweets = data[reg][0];
-                var score = roundTo3(data[reg][1]);
+            for (var reg in regionFeatures) {
+                var tweets = 0;
+                var score = 0.5;
+                if (data.hasOwnProperty(reg)) {
+                    tweets = data[reg][0];
+                    score = roundTo3(data[reg][1]);
+                }
                 var layer = regionFeatures[reg];
                 layer.feature.properties.count = tweets;
                 layer.feature.properties.score = score;
@@ -266,9 +374,10 @@
             }
         }
 
-        function getData(date) {
+        function getData() {
             $.get("italy_regions/", {
-                "date": date
+                "since": since,
+                "until": until
             }, updateMapData, 'json');
         }
 

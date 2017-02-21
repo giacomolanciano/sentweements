@@ -8,8 +8,7 @@ import persistence
 from tweets_streaming import SQLITE_DATETIME_FORMAT
 
 DEFAULT_SINCE = 7
-CLIENT_DATE_ONLY_FORMAT = '%d/%m/%Y'
-SQLITE_DATE_ONLY_FORMAT = '%Y-%m-%d 00:00:00.000'
+CLIENT_DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
 app = Flask(__name__)
 
@@ -30,17 +29,17 @@ def italy_regions_get_data():
     until_str = request.args.get('until')
 
     if since_str:
-        since = datetime.strptime(since_str, CLIENT_DATE_ONLY_FORMAT)
+        since = datetime.strptime(since_str, CLIENT_DATETIME_FORMAT)
     else:
         since = datetime.today() - timedelta(days=DEFAULT_SINCE)
 
     if until_str:
-        until = datetime.strptime(until_str, CLIENT_DATE_ONLY_FORMAT).strftime(SQLITE_DATE_ONLY_FORMAT)
+        until = datetime.strptime(until_str, CLIENT_DATETIME_FORMAT).strftime(SQLITE_DATETIME_FORMAT)
     else:
         until = datetime.now().strftime(SQLITE_DATETIME_FORMAT)
 
     # Query the db to obtain the data
-    db_response = persistence.get_regions_stats(since.strftime(SQLITE_DATE_ONLY_FORMAT), until)
+    db_response = persistence.get_regions_stats(since.strftime(SQLITE_DATETIME_FORMAT), until)
 
     # Dump to JSON string and send it
     json_data = json.dumps(db_response)
