@@ -5,20 +5,22 @@ Final project for [Data Mining](http://aris.me/index.php/data-mining-2016) cours
 at Università degli Studi di Roma "La Sapienza" (A.Y. 2016/2017).
 
 ## The project
-**Sentweements** is a simple sentiment analysis tool for tweets. It allows you to make a query against
-[Twitter Search API](https://dev.twitter.com/rest/public) and get back a dynamic sentiment analysis. It builds an image
-stream from the incoming tweets, performs sentiment analysis of each image using
-[Microsoft Emotion API](https://www.microsoft.com/cognitive-services/en-us/emotion-api) and push it to the web client.
-Results are presented on the client side in a beautiful fashion.
+**Sentweements** is a simple sentiment analysis tool for tweets.
+This visualisation allows you to see the Italian **sentimental situation**, using Twitter Streaming API to fetch tweets
+coming from Italy in real-time and Indico artificial intelligence to perform a textual sentiment analysis. It is also
+possible to select the starting date of the analysis, to get many different perspectives.
+Results are presented in real-time on the client side in a beautiful fashion.
+See also our images streaming [emotion analysis](https://github.com/giacomolanciano/sentweements).
 
 ## Technologies
-- Microsoft Emotion API - the artificial intelligence that detect emotions based on universal facial expressions.
-- Twitter Search API - give access to indices of recent or popular Tweets.
+- [Indico](https://indico.io/) - the artificial intelligence that detect sentiments in texts, available for several different languages.
+- [Twitter Streaming API](https://dev.twitter.com/streaming/overview) - to access in real-time to tweets coming from all over the Italy.
 - [Flask](http://flask.pocoo.org/) - microframework to build the webserver and serve client requests.
-- [SocketIO](http://socket.io/) - to build the pub-sub system to push notifications between client and server.
+- [Leaflet](http://leafletjs.com/) - to build the dynamic visualisation of Italian regions.
 
 ## To run
-Be sure to have **Python 3** installed. Note that some additional Python modules are required, you can run `dependencies.py` to install them all in one shot.  
+Be sure to have **Python 3** installed. Note that some additional Python modules are required, you can run `dependencies.py`
+to install them all in one shot.
 To run the webapp (locally), open a terminal and type `$ python webapp.py`. Then, open a browser and go to
 **localhost:5000**  (note that you still need a working Internet connection to download the tweets from Twitter).
 
