@@ -35,13 +35,12 @@ def italy_regions_get_data():
         since = datetime.today() - timedelta(days=DEFAULT_SINCE)
 
     if until_str:
-        until = datetime.strptime(until_str, CLIENT_DATE_ONLY_FORMAT)
+        until = datetime.strptime(until_str, CLIENT_DATE_ONLY_FORMAT).strftime(SQLITE_DATE_ONLY_FORMAT)
     else:
-        until = datetime.now()
+        until = datetime.now().strftime(SQLITE_DATETIME_FORMAT)
 
     # Query the db to obtain the data
-    db_response = persistence.get_regions_stats(since.strftime(SQLITE_DATE_ONLY_FORMAT),
-                                                until.strftime(SQLITE_DATETIME_FORMAT))
+    db_response = persistence.get_regions_stats(since.strftime(SQLITE_DATE_ONLY_FORMAT), until)
 
     # Dump to JSON string and send it
     json_data = json.dumps(db_response)
