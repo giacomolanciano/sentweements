@@ -9,7 +9,7 @@ at Università degli Studi di Roma "La Sapienza" (A.Y. 2016/2017).
 This visualisation allows you to see the Italian **sentimental situation**, using Twitter Streaming API to fetch tweets
 coming from Italy in real-time and Indico artificial intelligence to perform a textual sentiment analysis. It is also
 possible to select the starting date of the analysis, to get many different perspectives.
-Results are presented in real-time on the client side in a beautiful fashion.
+Results are presented in real-time on the client side in a beautiful fashion.  
 See also our images streaming [emotion analysis](https://github.com/giacomolanciano/sentweements).
 
 ## Technologies
