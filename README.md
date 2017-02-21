@@ -9,7 +9,7 @@ at Università degli Studi di Roma "La Sapienza" (A.Y. 2016/2017).
 [Twitter Search API](https://dev.twitter.com/rest/public) and get back a dynamic sentiment analysis. It builds an image
 stream from the incoming tweets, performs sentiment analysis of each image using
 [Microsoft Emotion API](https://www.microsoft.com/cognitive-services/en-us/emotion-api) and push it to the web client.
-Results are presented on the client side in a beautiful fashion.
+Results are presented on the client side in a beautiful fashion.  
 See also our text streaming [sentiment analysis](https://github.com/giacomolanciano/sentweements/tree/master-v2).
 
 ## Technologies
