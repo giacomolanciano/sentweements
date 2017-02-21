@@ -20,9 +20,10 @@ if __name__ == '__main__':
     c = conn.cursor()
 
     # Create tables
-    c.execute('''CREATE TABLE IF NOT EXISTS tweets (id_str, region, datetime, text, lang, score, PRIMARY KEY (id_str, region))''')
-    c.execute('''CREATE TABLE IF NOT EXISTS images (region , image_url, datetime, anger, contempt, disgust, fear, happiness, neutral,
-              sadness, surprise, PRIMARY KEY (region, image_url))''')
+    c.execute('''CREATE TABLE IF NOT EXISTS tweets (id_str, region, datetime, text, lang, score,
+              PRIMARY KEY (id_str, region))''')
+    c.execute('''CREATE TABLE IF NOT EXISTS images (region , image_url, datetime, anger, contempt, disgust, fear,
+              happiness, neutral, sadness, surprise, PRIMARY KEY (region, image_url))''')
 
     # Delete tables
     # c.execute("DROP TABLE tweets")
@@ -37,7 +38,6 @@ if __name__ == '__main__':
     # c.execute("SELECT * FROM tweets")
     # for row in c:
     #     print(row)
-    #
     # print('\nimages')
     # c.execute("SELECT * FROM images")
     # for row in c:
@@ -45,12 +45,10 @@ if __name__ == '__main__':
 
     # test regions averages
     date = '2017-02-17 20:21:00.000'
-
     # print('\nregion_score')
     # c.execute("SELECT region, score FROM tweets WHERE datetime >= ?", (date,))
     # for row in c:
     #     print(row)
-
     print('\navg')
     res = get_regions_stats(date)
     print(res)
