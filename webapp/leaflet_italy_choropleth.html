@@ -379,9 +379,16 @@
             }, updateMapData, 'json');
         }
 
+        function refreshData() {
+            if (!until || moment().isBefore(until)) {
+                // only query the server if in stream mode or now < until
+                getData();
+            }
+        }
+
         getData(); // call to initialize map
 
-        window.setInterval(getData, 10000); // recurring call to update
+        window.setInterval(refreshData, 10000); // recurring call to update
     </script>
 </body>
 
