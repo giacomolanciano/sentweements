@@ -170,7 +170,7 @@ class RegionListener(StreamListener):
 
     def on_error(self, status):
         if self.debug:
-            print(status)
+            print(self.region_name + ': ' + status)
         return True
 
 
