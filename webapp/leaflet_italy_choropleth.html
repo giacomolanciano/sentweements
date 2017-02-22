@@ -317,26 +317,33 @@
         var since = null;
         var until = null;
 
-        $(function () {
-            var formatStr = 'Y-MM-DD HH:mm:ss';
-            $('#sincePicker').datetimepicker({
-                useCurrent: false, //Important! See issue #1075
-                format: formatStr
-            });
-            $('#untilPicker').datetimepicker({
-                useCurrent: false, //Important! See issue #1075
-                format: formatStr
-            });
-            $("#sincePicker").on("dp.change", function (e) {
-                $('#untilPicker').data("DateTimePicker").minDate(e.date);
-                since = e.date ? e.date.format(formatStr) : null;
-                getData(); // query the server
-            });
-            $("#untilPicker").on("dp.change", function (e) {
-                $('#sincePicker').data("DateTimePicker").maxDate(e.date);
-                until = e.date ? e.date.format(formatStr) : null;
-                getData(); // query the server
-            });
+        var formatStr = 'Y-MM-DD HH:mm:ss';
+
+        $('#sincePicker').datetimepicker({
+            useCurrent: false, //Important! See issue #1075
+            format: formatStr,
+            defaultDate: moment().subtract(7, 'days').startOf('day')
+        });
+        $('#untilPicker').datetimepicker({
+            useCurrent: false, //Important! See issue #1075
+            format: formatStr
+        });
+
+        since = $('#sincePicker').data("DateTimePicker").defaultDate();
+        since = since ? since.format(formatStr) : null;
+
+        until = $('#untilPicker').data("DateTimePicker").defaultDate();
+        until = until ? until.format(formatStr) : null;
+
+        $("#sincePicker").on("dp.change", function (e) {
+            $('#untilPicker').data("DateTimePicker").minDate(e.date);
+            since = e.date ? e.date.format(formatStr) : null;
+            getData(); // query the server
+        });
+        $("#untilPicker").on("dp.change", function (e) {
+            $('#sincePicker').data("DateTimePicker").maxDate(e.date);
+            until = e.date ? e.date.format(formatStr) : null;
+            getData(); // query the server
         });
 
         function roundTo3(num) {
