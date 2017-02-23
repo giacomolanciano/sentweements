@@ -5,16 +5,15 @@ Final project for [Data Mining](http://aris.me/index.php/data-mining-2016) cours
 at Università degli Studi di Roma "La Sapienza" (A.Y. 2016/2017).
 
 ## The project
-**Sentweements** is a simple sentiment analysis tool for tweets. It allows you to make a query against
-[Twitter Search API](https://dev.twitter.com/rest/public) and get back a dynamic sentiment analysis. It builds an image
-stream from the incoming tweets, performs sentiment analysis of each image using
-[Microsoft Emotion API](https://www.microsoft.com/cognitive-services/en-us/emotion-api) and push it to the web client.
+**Sentweements** is a simple sentiment analysis tool for tweets. It allows you to make a query against Twitter Search API and get back
+a dynamic sentiment analysis. It builds an image stream from the incoming tweets, performs sentiment analysis of each image using 
+Microsoft Emotion API and push it to the web client.
 Results are presented on the client side in a beautiful fashion.  
 See also our text streaming [sentiment analysis](https://github.com/giacomolanciano/sentweements/tree/master-v2).
 
 ## Technologies
-- Microsoft Emotion API - the artificial intelligence that detect emotions based on universal facial expressions.
-- Twitter Search API - give access to indices of recent or popular Tweets.
+- [Microsoft Emotion API](https://www.microsoft.com/cognitive-services/en-us/emotion-api) - the artificial intelligence that detect emotions based on universal facial expressions.
+- [Twitter Search API](https://dev.twitter.com/rest/public) - give access to indices of recent or popular Tweets.
 - [Flask](http://flask.pocoo.org/) - microframework to build the webserver and serve client requests.
 - [SocketIO](http://socket.io/) - to build the pub-sub system to push notifications between client and server.
 
