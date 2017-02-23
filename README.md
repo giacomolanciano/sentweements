@@ -24,7 +24,7 @@ to install them all in one shot.
 To run the webapp (locally), open a terminal and type `$ python webapp.py`. Then, open a browser and go to
 **localhost:5000**  (note that you still need a working Internet connection to download the tweets from Twitter).
 
-<br><p align="center" href="https://gyazo.com/0eabb771ee5875242b2e473aef9ec40b"><img src="https://i.gyazo.com/0eabb771ee5875242b2e473aef9ec40b.gif" alt="https://gyazo.com/0eabb771ee5875242b2e473aef9ec40b" width="50%"/></p>
+<br><p align="center" href="https://gyazo.com/0eabb771ee5875242b2e473aef9ec40b"><img src="https://gyazo.com/6c0e91ecbe89f09a7227677c23854327.gif" alt="https://gyazo.com/6c0e91ecbe89f09a7227677c23854327" width="50%"/></p>
 
 ## Developers
 
