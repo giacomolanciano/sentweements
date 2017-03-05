@@ -6,10 +6,16 @@ at Università degli Studi di Roma "La Sapienza" (A.Y. 2016/2017).
 
 ## The project
 **Sentweements** is a simple sentiment analysis tool for tweets.
-This visualisation allows you to see the Italian **sentimental situation**, using Twitter Streaming API to fetch tweets
-coming from Italy in real-time and Indico artificial intelligence to perform a textual sentiment analysis. It is also
-possible to select the starting date of the analysis, to get many different perspectives.
-Results are presented in real-time on the client side in a beautiful fashion.  
+This interactive choropleth map allows you to see the Italian **sentimental situation**, using Twitter Streaming API to
+fetch tweetsvcoming from Italy in real-time and Indico artificial intelligence to perform a textual sentiment analysis.
+Results are presented in real-time on the client side in a beautiful fashion. With **Sentweements** you have:
+- national and region-specific statistics, available through mouse hover.
+- stats based on Twitter streaming data.
+- data persistence implemented with SQLite DB.
+- dynamic updates automatically reflected on the map as new data becomes available.
+- static analysis mode available by defining a time window of tweets to analyse, to get many different perspectives.
+- api keys "carousel" to expand rate limit both for Twitter and sentiments APIs (see [secret_keys_template](
+https://github.com/giacomolanciano/sentweements/blob/master-v2/secret_keys_template.txt)).
 See also our images streaming [emotion analysis](https://github.com/giacomolanciano/sentweements).
 
 ## Technologies
