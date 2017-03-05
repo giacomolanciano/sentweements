@@ -15,9 +15,9 @@ With **Sentweements** you have:
 - dynamic updates automatically reflected on the map as new data becomes available (Twitter streaming data).
 - static analysis mode available by defining a time window of tweets to analyze, to get different perspectives.
 - api keys **carousel** and **multi-threaded** data retrieval architecture to expand rate limit both for Twitter and sentiments APIs (check [secret_keys_template](
-https://github.com/giacomolanciano/sentweements/blob/master-v2/secret_keys_template.txt) for instructions).
+https://github.com/giacomolanciano/sentweements/blob/master/secret_keys_template.txt) for instructions).
 
-See also our images streaming [emotion analysis](https://github.com/giacomolanciano/sentweements).
+See also our images streaming [emotion analysis](https://github.com/giacomolanciano/sentweements/tree/master-old).
 
 ## Technologies
 - [Indico](https://indico.io/) - an artificial intelligence service that detects sentiments in texts, available for several different languages.
