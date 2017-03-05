@@ -5,10 +5,14 @@ Final project for [Data Mining](http://aris.me/index.php/data-mining-2016) cours
 at Università degli Studi di Roma "La Sapienza" (A.Y. 2016/2017).
 
 ## The project
-**Sentweements** is a simple sentiment analysis tool for tweets. It allows you to make a query against Twitter Search API and get back
-a dynamic sentiment analysis. It builds an image stream from the incoming tweets, performs sentiment analysis of each image using 
-Microsoft Emotion API and push it to the web client.
-Results are presented on the client side in a beautiful fashion.  
+**Sentweements** is a simple sentiment analysis tool for tweets.
+
+It allows you to make a query against Twitter Search API and get back
+a dynamic sentiment analysis.  
+It builds an image stream from the incoming tweets, performs sentiment analysis of each image using 
+Microsoft Emotion API and pushes it to the web client.  
+Results are presented on the client side in a beautiful fashion.
+
 See also our text streaming [sentiment analysis](https://github.com/giacomolanciano/sentweements/tree/master-v2).
 
 ## Technologies
@@ -18,7 +22,9 @@ See also our text streaming [sentiment analysis](https://github.com/giacomolanci
 - [SocketIO](http://socket.io/) - to build the pub-sub system to push notifications between client and server.
 
 ## To run
-Be sure to have **Python 3** installed. Note that some additional Python modules are required.  
+Be sure to have **Python 3** installed.  
+Note that some additional Python modules are required.
+
 To run the webapp (locally), open a terminal and type `$ python webapp.py`. Then, open a browser and go to
 **localhost:5000**  (note that you still need a working Internet connection to download the tweets from Twitter).
 
