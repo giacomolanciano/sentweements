@@ -13,7 +13,7 @@ It builds an image stream from the incoming tweets, performs sentiment analysis 
 Microsoft Emotion API and pushes it to the web client.  
 Results are presented on the client side in a beautiful fashion.
 
-See also our text streaming [sentiment analysis](https://github.com/giacomolanciano/sentweements/tree/master-v2).
+See also our text streaming [sentiment analysis](https://github.com/giacomolanciano/sentweements).
 
 ## Technologies
 - [Microsoft Emotion API](https://www.microsoft.com/cognitive-services/en-us/emotion-api) - the artificial intelligence that detect emotions based on universal facial expressions.
