@@ -6,9 +6,9 @@ from tweepy.streaming import StreamListener
 
 import emotions
 import statistics
-from secret_keys import EMOTION_API_KEY
-from secret_keys import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET
-from secret_keys import TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET
+from secret_keys import EMOTION_API_KEYS
+from secret_keys import TWITTER_ACCESS_TOKENS, TWITTER_ACCESS_TOKEN_SECRETS
+from secret_keys import TWITTER_CONSUMER_KEYS, TWITTER_CONSUMER_SECRETS
 
 
 class ImageListener(StreamListener):
@@ -16,7 +16,7 @@ class ImageListener(StreamListener):
 
     # headers for Microsoft Emotion API request
     headers = dict()
-    headers[emotions.API_SUBSCR_HEADER_KEY] = EMOTION_API_KEY
+    headers[emotions.API_SUBSCR_HEADER_KEY] = EMOTION_API_KEYS[0]
     headers[emotions.CONTENT_TYPE_HEADER_KEY] = emotions.CONTENT_TYPE_HEADER_VALUE
 
     def __init__(self, print_progress=True):
@@ -66,8 +66,8 @@ class ImageListener(StreamListener):
 
 if __name__ == '__main__':
     listener = ImageListener()
-    auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
-    auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
+    auth = OAuthHandler(TWITTER_CONSUMER_KEYS[0], TWITTER_CONSUMER_SECRETS[0])
+    auth.set_access_token(TWITTER_ACCESS_TOKENS[0], TWITTER_ACCESS_TOKEN_SECRETS[0])
     stream = Stream(auth, listener)
 
     # Twitter Streaming APIs let us filter tweets according to users, text, location, and languages.

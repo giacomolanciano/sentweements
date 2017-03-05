@@ -1,4 +1,4 @@
-from secret_keys import EMOTION_API_KEY
+from secret_keys import EMOTION_API_KEYS
 import requests
 import time
 
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     urlImage = 'https://raw.githubusercontent.com/Microsoft/ProjectOxford-ClientSDK/master/Face/Windows/Data/detection3.jpg'
 
     headers = dict()
-    headers[API_SUBSCR_HEADER_KEY] = EMOTION_API_KEY
+    headers[API_SUBSCR_HEADER_KEY] = EMOTION_API_KEYS[0]
     headers[CONTENT_TYPE_HEADER_KEY] = CONTENT_TYPE_HEADER_VALUE
 
     image_sentiments = process_request(urlImage, headers)
