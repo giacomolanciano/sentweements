@@ -23,12 +23,12 @@ See also our images streaming [emotion analysis](https://github.com/giacomolanci
 - [Indico](https://indico.io/) - an artificial intelligence service that detects sentiments in texts, available for several different languages.
 - [Twitter Streaming API](https://dev.twitter.com/streaming/overview) - real-time access to tweets coming from all over Italy.
 - [Flask](http://flask.pocoo.org/) - Python microframework to build the webserver and serve client requests.
-- [Leaflet](http://leafletjs.com/) - Javascript framework to build the choropleth map visualisation.
+- [Leaflet](http://leafletjs.com/) - Javascript framework to build the choropleth map visualization.
 
 ## To run
 Be sure to have **Python 3** installed.
 
-Note that some additional Python modules are required; you can run `dependencies.py`
+Note that some additional Python modules are required; you can run `$ python dependencies.py`
 to install them all in one shot.
 
 To start tweets retrieval, open a terminal and type `$ python tweets_streaming.py`.  
